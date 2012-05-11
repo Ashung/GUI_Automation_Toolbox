@@ -12,10 +12,6 @@ New slice from the layer you selected. If you select multiple layers(DO NOT incl
 New slice from the layers envet layer groups you selected. It will create one slice.
 ###Slice Selection
 Convert selection to user slice.
-###Show/Hide Layer Edges
-Menu: "View" - "Show" - "Layer Edges". 
-###Show/Hide Smart Guides
-Menu: "View" - "Show" - "Smart Guides".
 ###Copy Layer(s) to New Window
 Copy layer(s) to new window and remove transparent pixels around the document.
 ###960Grid: 12
@@ -32,5 +28,15 @@ Setting the grid, if you design for a retina devices like iPhone 4 or new iPad.
 New window for current document, and view in actual pixels.
 ###New Working Window(3200%)
 New window for current document, and zoom in to 3200%.
+###Show/Hide Layer Edges
+Menu: "View" - "Show" - "Layer Edges". 
+###Show/Hide Smart Guides
+Menu: "View" - "Show" - "Smart Guides".
+###Transparency Grid - Light
+Change the transparency grid color to light. 
+###Transparency Grid - Medium
+Change the transparency grid color to medium.
+###Transparency Grid - Dark
+Change the transparency grid color to dark.
 ###About
 About Web Design Actions      
