@@ -16,3 +16,7 @@ Photoshop Actions for Android 4.x app user interface designer.
 Web Design Actions
 ------------------
 Photoshop Actions for web designer and front-end developer.
+
+Magic Actions
+------------------
+Photoshop Actions for create amazing textures.
