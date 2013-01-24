@@ -17,16 +17,12 @@ function bluePrint(minimumCell, backgroundColor) {
     doc.activeLayer.name = 'bluePrint(' + minimumCell + ', "' + backgroundColor + '"); //bluePrint.jsx create by Ashung Hung, https://github.com/Ashung/Photoshop_Actions_Package_for_Designers/Scripts';
     
     bgColor = new SolidColor();
-    bgColor.rgb.red = parseInt(backgroundColor.substr(0,2), 16);
-    bgColor.rgb.green = parseInt(backgroundColor.substr(2,2), 16);
-    bgColor.rgb.blue = parseInt(backgroundColor.substr(4,2), 16); 
+    bgColor.rgb.hexValue = backgroundColor; 
     doc.selection.select([[0,0],[0,docHeight],[docWidth,docHeight],[docWidth,0]]);
     doc.selection.fill(bgColor);
     
     lineColor = new SolidColor();
-    lineColor.rgb.red = 255;
-    lineColor.rgb.green = 255;
-    lineColor.rgb.blue = 255; 
+    lineColor.rgb.hexValue = 'ffffff';
     
     for(x = 0, i = 0; x < docWidth; x += minimumCell, i++) {
         doc.selection.select([[x,0],[x,docHeight],[x+1,docHeight],[x+1,0]]);
