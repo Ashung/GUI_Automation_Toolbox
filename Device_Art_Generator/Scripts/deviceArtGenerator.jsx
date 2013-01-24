@@ -65,8 +65,6 @@ var devices = [
 
 ];
 
-createDeviceArt('iPhone4s_white');
-
 function createDeviceArt(deviceId, isPortrait, transparentBackground, hasShadow, hasLight) {
     var currentDevice, devicePath,
         docName, docWidth, docHeight,
