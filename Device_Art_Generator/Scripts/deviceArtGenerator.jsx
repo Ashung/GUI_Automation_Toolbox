@@ -142,7 +142,7 @@ function createDeviceArt(deviceId, isPortrait, transparentBackground, hasShadow,
         return false;
     }
 
-    if(transparentBackground = true) {
+    if(transparentBackground == true) {
         newDoc(docName, docWidth, docHeight);
     } else {
         newWhiteDoc(docName, docWidth, docHeight);
@@ -160,7 +160,7 @@ function createDeviceArt(deviceId, isPortrait, transparentBackground, hasShadow,
     convertToSmartObject();
     smartObjectReplaceContents(deviceImage);
     activeDocument.activeLayer.name = 'device';
-    if(transparentBackground = true) {
+    if(transparentBackground == true) {
         removeBottomLayer();
     }
     // screen
@@ -181,7 +181,10 @@ function createDeviceArt(deviceId, isPortrait, transparentBackground, hasShadow,
         // resize design layer
         var designImageWidth = activeDocument.activeLayer.bounds[2].as('px') - activeDocument.activeLayer.bounds[0].as('px');
         var designImageHeight = activeDocument.activeLayer.bounds[3].as('px') - activeDocument.activeLayer.bounds[1].as('px');
-        var orginInterpolation = app.preferences.interpolation;
+        var orginInterpolation = null;
+        try {
+            orginInterpolation = app.preferences.interpolation;
+        } catch(e){}
         if(designImageWidth != screenWidth || designImageHeight != screenHeight) {
             if(designImageWidth == actualScreenWidth && designImageHeight == actualScreenHeight) {
                 app.preferences.interpolation = ResampleMethod.BILINEAR;
@@ -207,7 +210,9 @@ function createDeviceArt(deviceId, isPortrait, transparentBackground, hasShadow,
             var x = new UnitValue(newPosX > offsetX ? Math.abs(newPosX-offsetX)*-1 : Math.abs(newPosX-offsetX), 'px');
             var y = new UnitValue(newPosY > offsetY ? Math.abs(newPosY-offsetY)*-1 : Math.abs(newPosY-offsetY), 'px');
             activeDocument.activeLayer.translate(x, y);
-            app.preferences.interpolation = orginInterpolation;
+            if(orginInterpolation) {
+                app.preferences.interpolation = orginInterpolation;
+            }
         }
     }
     // light
@@ -307,8 +312,6 @@ function deselectPath() {
 }
 
 // Type the code below, like: createDeviceArt('iPhone4s_white', true, false);
-
-
 
 
 
