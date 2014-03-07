@@ -9,9 +9,9 @@ Android Design Actions
 ----------------------
 Photoshop Actions for Android app user interface designer.
 
-Android 4 Design Actions
+Scripts
 ------------------------
-Photoshop Actions for Android 4.x app user interface designer.
+Photoshop Scripts for UI designer.
 
 Web Design Actions
 ------------------
