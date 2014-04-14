@@ -1,4 +1,4 @@
-﻿// Make Retina Image
+// Make Retina Image
 // by Ashung Hung
 
 try {
@@ -11,3 +11,5 @@ try {
 } catch (e) {
    alert(e.message);
 }
+
+
