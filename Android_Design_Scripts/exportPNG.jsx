@@ -1,14 +1,7 @@
-/*
-
-Auto save png file.
 
 
-
-*/
-
-main();
-
-function main(){
+(function main(){
+    'use strict'
     
     var ext = decodeURI(app.activeDocument.name).replace(/^.*\./,'');
     if(ext.toLowerCase() != 'psd' && ext.toLowerCase() != 'psb') return;
@@ -25,4 +18,4 @@ function main(){
         pngSaveOptions.compression = 9;
         pngSaveOptions.interlaced = false;
         activeDocument.saveAs(saveFile, pngSaveOptions, true, Extension.LOWERCASE);
-}
+})();

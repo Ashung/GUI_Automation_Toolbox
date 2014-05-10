@@ -69,5 +69,5 @@ function exportPNG(targetFile) {
         png24Options.transparency = true;
         png24Options.interlaced = false;
         png24Options.includeProfile = false;
-    activeDocument.exportDocument(targetFile, ExportType.SAVEFORWEB, png24Options);  
+    activeDocument.exportDocument(targetFile, ExportType.SAVEFORWEB, png24Options);
 }
