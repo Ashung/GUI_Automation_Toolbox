@@ -1,0 +1,1 @@
+#target "photoshop";#include "Ps.jsx";_Ps._Layer._New._Layer_Via_Copy();
