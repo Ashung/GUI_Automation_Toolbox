@@ -1,5 +1,5 @@
 /**
-* @@@BUILDINFO@@@ Android_Asset_Package_For_Adobe_Generator.jsx !Version! Fri May 09 2014 23:39:26 GMT+0800
+* @@@BUILDINFO@@@ Android_Asset_Package_For_Adobe_Generator.jsx !Version! Mon May 12 2014 20:14:18 GMT+0800
 */
 /*
  * Android Asset Package For Adobe Generator
@@ -13,51 +13,70 @@
 
 #target 'photoshop';
 
-var inputs = File.openDialog('X', 'Images:*.png; *.gif; *.jpg', true);
+(function(){
+    'use strict'
+    
+    if(documents.length == 0)
+        return;
+    
+    var root = activeDocument.path;
+    var psdNameWithoutExt = activeDocument.name.replace(/\.[^\.]+$/, '');
+    var assetsPath = root + '/' + psdNameWithoutExt + '-assets';
 
-if(inputs != null) {
-    
-    var dir = inputs[0].path;
-    
-    if(!Folder(dir + '/drawable-mdpi').exists)
-        Folder(dir + '/drawable-mdpi').create();
-    if(!Folder(dir + '/drawable-hdpi').exists)
-        Folder(dir + '/drawable-hdpi').create();
-    if(!Folder(dir + '/drawable-xhdpi').exists)
-        Folder(dir + '/drawable-xhdpi').create();
-    if(!Folder(dir + '/drawable-xxhdpi').exists)
-        Folder(dir + '/drawable-xxhdpi').create();
-    if(!Folder(dir + '/drawable-xxxhdpi').exists)
-        Folder(dir + '/drawable-xxxhdpi').create();
-    
-    for(var i = 0; i < inputs.length; i++) {
+    if(!Folder(assetsPath).exists)
+        return;
+
+    var assets = Folder(assetsPath).getFiles();
+    if(assets != null) {
+        // Create folders.
+        if(!Folder(root + '/res').exists)
+            Folder(root + '/res').create();
+        if(!Folder(root + '/res/drawable-mdpi').exists)
+            Folder(root + '/res/drawable-mdpi').create();
+        if(!Folder(root + '/res/drawable-hdpi').exists)
+            Folder(root + '/res/drawable-hdpi').create();
+        if(!Folder(root + '/res/drawable-xhdpi').exists)
+            Folder(root + '/res/drawable-xhdpi').create();
+        if(!Folder(root + '/res/drawable-xxhdpi').exists)
+            Folder(root + '/res/drawable-xxhdpi').create();
+        if(!Folder(root + '/res/drawable-xxxhdpi').exists)
+            Folder(root + '/res/drawable-xxxhdpi').create();
         
-        if(/^mdpi-/i.test(inputs[i].name)) {
-            inputs[i].copy(dir + '/drawable-mdpi/' + inputs[i].name.replace(/^mdpi-/i, ''));
-            inputs[i].remove();
+        // Move assets to res/drawable-[dpi] folder.
+        for(var i = 0; i < assets.length; i++) {
+            if(/^mdpi-/i.test(assets[i].name)) {
+                assets[i].copy(root + '/res/drawable-mdpi/' + assets[i].name.replace(/^mdpi-/i, ''));
+                assets[i].remove();
+            }
+            if(/^hdpi-/i.test(assets[i].name)) {
+                assets[i].copy(root + '/res/drawable-hdpi/' + assets[i].name.replace(/^hdpi-/i, ''));
+                assets[i].remove();
+            }
+            if(/^xhdpi-/i.test(assets[i].name)) {
+                assets[i].copy(root + '/res/drawable-xhdpi/' + assets[i].name.replace(/^xhdpi-/i, ''));
+                assets[i].remove();
+            }
+            if(/^xxhdpi-/i.test(assets[i].name)) {
+                assets[i].copy(root + '/res/drawable-xxhdpi/' + assets[i].name.replace(/^xxhdpi-/i, ''));
+                assets[i].remove();
+            }
+            if(/^xxxhdpi-/i.test(assets[i].name)) {
+                assets[i].copy(root + '/res/drawable-xxxhdpi/' + assets[i].name.replace(/^xxxhdpi-/i, ''));
+                assets[i].remove();
+            }
         }
-    
-        if(/^hdpi-/i.test(inputs[i].name)) {
-            inputs[i].copy(dir + '/drawable-hdpi/' + inputs[i].name.replace(/^hdpi-/i, ''));
-            inputs[i].remove();
-        }
-        
-        if(/^xhdpi-/i.test(inputs[i].name)) {
-            inputs[i].copy(dir + '/drawable-xhdpi/' + inputs[i].name.replace(/^xhdpi-/i, ''));
-            inputs[i].remove();
-        }
-    
-        if(/^xxhdpi-/i.test(inputs[i].name)) {
-            inputs[i].copy(dir + '/drawable-xxhdpi/' + inputs[i].name.replace(/^xxhdpi-/i, ''));
-            inputs[i].remove();
-        }
-    
-        if(/^xxxhdpi-/i.test(inputs[i].name)) {
-            inputs[i].copy(dir + '/drawable-xxxhdpi/' + inputs[i].name.replace(/^xxxhdpi-/i, ''));
-            inputs[i].remove();
-        }
-    
+
+        // Remove empty folders.
+        if(!Folder(root + '/res/drawable-mdpi').getFiles())
+            Folder(root + '/res/drawable-mdpi').remove();
+        if(!Folder(root + '/res/drawable-hdpi').getFiles())
+            Folder(root + '/res/drawable-hdpi').remove();
+        if(!Folder(root + '/res/drawable-xhdpi').getFiles())
+            Folder(root + '/res/drawable-xhdpi').remove();
+        if(!Folder(root + '/res/drawable-xxhdpi').getFiles())
+            Folder(root + '/res/drawable-xxhdpi').remove();
+        if(!Folder(root + '/res/drawable-xxxhdpi').getFiles())
+            Folder(root + '/res/drawable-xxxhdpi').remove();
     }
 
-}
-
+})();

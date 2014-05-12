@@ -1,10 +1,24 @@
-
+/**
+* @@@BUILDINFO@@@ exportPNG.jsx !Version! Mon May 12 2014 20:18:54 GMT+0800
+*/
+/*
+ * Android Image Log
+ * 
+ * Create image logs for psd file veryday.
+ * 'File' - 'Scripts' - 'Script Events Manager'
+ *
+ *
+ *
+ * Author: Ashung Hung
+ *
+ */
 
 (function main(){
     'use strict'
     
     var ext = decodeURI(app.activeDocument.name).replace(/^.*\./,'');
-    if(ext.toLowerCase() != 'psd' && ext.toLowerCase() != 'psb') return;
+    if(ext.toLowerCase() != 'psd' && ext.toLowerCase() != 'psb' && ext.toLowerCase() != 'pdd')
+        return;
     
     var name = app.activeDocument.name.replace(/\.[^\.]+$/, '');
     var path = app.activeDocument.path;
