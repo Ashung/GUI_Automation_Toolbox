@@ -1,5 +1,5 @@
 /**
-* @@@BUILDINFO@@@ Android_Asset_Package_For_Adobe_Generator.jsx !Version! Mon May 12 2014 20:14:18 GMT+0800
+* @@@BUILDINFO@@@ Android_Asset_Package_For_Adobe_Generator.jsx !Version! Mon May 19 2014 16:47:16 GMT+0800
 */
 /*
  * Android Asset Package For Adobe Generator
@@ -44,24 +44,24 @@
         
         // Move assets to res/drawable-[dpi] folder.
         for(var i = 0; i < assets.length; i++) {
-            if(/^mdpi-/i.test(assets[i].name)) {
-                assets[i].copy(root + '/res/drawable-mdpi/' + assets[i].name.replace(/^mdpi-/i, ''));
+            if(/^mdpi_/i.test(assets[i].name)) {
+                assets[i].copy(root + '/res/drawable-mdpi/' + assets[i].name.replace(/^mdpi_/i, ''));
                 assets[i].remove();
             }
-            if(/^hdpi-/i.test(assets[i].name)) {
-                assets[i].copy(root + '/res/drawable-hdpi/' + assets[i].name.replace(/^hdpi-/i, ''));
+            if(/^hdpi_/i.test(assets[i].name)) {
+                assets[i].copy(root + '/res/drawable-hdpi/' + assets[i].name.replace(/^hdpi_/i, ''));
                 assets[i].remove();
             }
-            if(/^xhdpi-/i.test(assets[i].name)) {
-                assets[i].copy(root + '/res/drawable-xhdpi/' + assets[i].name.replace(/^xhdpi-/i, ''));
+            if(/^xhdpi_/i.test(assets[i].name)) {
+                assets[i].copy(root + '/res/drawable-xhdpi/' + assets[i].name.replace(/^xhdpi_/i, ''));
                 assets[i].remove();
             }
-            if(/^xxhdpi-/i.test(assets[i].name)) {
-                assets[i].copy(root + '/res/drawable-xxhdpi/' + assets[i].name.replace(/^xxhdpi-/i, ''));
+            if(/^xxhdpi_/i.test(assets[i].name)) {
+                assets[i].copy(root + '/res/drawable-xxhdpi/' + assets[i].name.replace(/^xxhdpi_/i, ''));
                 assets[i].remove();
             }
-            if(/^xxxhdpi-/i.test(assets[i].name)) {
-                assets[i].copy(root + '/res/drawable-xxxhdpi/' + assets[i].name.replace(/^xxxhdpi-/i, ''));
+            if(/^xxxhdpi_/i.test(assets[i].name)) {
+                assets[i].copy(root + '/res/drawable-xxxhdpi/' + assets[i].name.replace(/^xxxhdpi_/i, ''));
                 assets[i].remove();
             }
         }

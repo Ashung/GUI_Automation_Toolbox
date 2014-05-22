@@ -1,13 +1,17 @@
 /**
-* @@@BUILDINFO@@@ exportPNG.jsx !Version! Mon May 12 2014 20:18:54 GMT+0800
+* @@@BUILDINFO@@@ Android_Image_Log.jsx !Version! Tue May 13 2014 12:13:46 GMT+0800
 */
 /*
  * Android Image Log
  * 
  * Create image logs for psd file veryday.
- * 'File' - 'Scripts' - 'Script Events Manager'
  *
- *
+ * HOW TO USE:
+ * 1, Open 'File' - 'Scripts' - 'Script Events Manager...' dialog. 
+ * 2, Check the 'Enable Events to Run Scripts/Actions:'.
+ * 3, In 'Photoshop Event' choose 'Save Document' event.
+ * 4, check 'Script' radiobox and browse to Android_Image_Log.jsx.
+ * 5, Press 'Add'.
  *
  * Author: Ashung Hung
  *
