@@ -21,8 +21,8 @@
         return;
     
     // Default dpi config.
-    //var psdDPI = 'MDPI'; // MDPI or XHDPI
-    var psdDPI = 'XHDPI';
+    var psdDPI = 'MDPI';
+    //var psdDPI = 'XHDPI';
 
     // Get dpi from document name.
     if(/\_(mdpi).(psd|pdd|psb)$/i.test(activeDocument.name))

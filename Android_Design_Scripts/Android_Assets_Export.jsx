@@ -2,7 +2,7 @@
 * @@@BUILDINFO@@@ Android_Asset_Export.jsx !Version! Tue May 20 2014 10:44:42 GMT+0800
 */
 /*
- * Android Asset Export
+ * Android Assets Export
  * 
  * Automation resize psd file and exprot PNG for different dpi.
  *
@@ -27,7 +27,7 @@
         docDPI: Group {\
             orientation: 'column',\
             alignChildren: 'left', \
-            labelFiles: StaticText { text: 'Your document DPI:' },\
+            labelFiles: StaticText { text: 'Your document DPI (mdpi/xhdpi recommend):' },\
             docDPIList: DropDownList {\
                 size: [300, 25] \
             }\
@@ -50,15 +50,24 @@
         exportFileName: Group {\
             orientation: 'column',\
             alignChildren: 'left', \
-            labelFiles: StaticText { text: 'File name (Not include \".9.png\"):' },\
+            labelFiles: StaticText { text: 'File name (Not include \".png/.9.png\"):' },\
             fileNameText: EditText {\
                 size: [300, 25] \
+            }\
+        },\
+        ninePatch: Group {\
+            orientation: 'column',\
+            alignChildren: 'left', \
+            labelNinePatch: StaticText { text: 'Nine-Patch:'},\
+            checkboxNinePatch: Checkbox {\
+                value: false,\
+                text: 'Yes.'\
             }\
         },\
         exportDPI: Group {\
             orientation: 'column',\
             alignChildren: 'left', \
-            label: StaticText { text: 'Export:'},\
+            labelExport: StaticText { text: 'Export:'},\
             dpis: Group {\
                 orientation: 'row' \
             }\
@@ -109,6 +118,9 @@
     // Initialize File Name
     fileName.text = activeDocument.activeLayer.name;
     
+    //
+    var ninePatch = NinePatchResize.ninePatch.checkboxNinePatch;
+    
     // Initialize Export DPI
     var mdpi, hdpi, xhdpi, xxhdpi, xxxhdpi;
     for(var i = 0; i < dpis.length; i ++) {
@@ -138,21 +150,24 @@
             Folder(path.text + '/drawable-xxxhdpi').create();
             
         if(mdpi.value) {
-            exportNinePatch('mdpi');
+            exportAssets('mdpi');
         }
         if(hdpi.value) {
-            exportNinePatch('hdpi');
+            exportAssets('hdpi');
         }
         if(xhdpi.value) {
-            exportNinePatch('xhdpi');
+            exportAssets('xhdpi');
         }
         if(xxhdpi.value) {
-            exportNinePatch('xxhdpi');
+            exportAssets('xxhdpi');
         }
         if(xxxhdpi.value) {
-            exportNinePatch('xxxhdpi');
+            exportAssets('xxxhdpi');
         }
-
+    
+        $.writeln('Completed!');
+        
+        NinePatchResize.close();
     }
     
     NinePatchResize.show();
@@ -176,6 +191,11 @@
         }
     }
 
+    function normalResize(scale) {
+        $.writeln('Scale: x' +  scale);
+        activeDocument.resizeImage(Math.ceil(activeDocument.width.as('px') * scale), Math.ceil(activeDocument.height.as('px') * scale), 72, ResampleMethod.NEARESTNEIGHBOR);
+    }
+    
     function ninePatchResize(scale) {
         $.writeln('Scale: x' +  scale);
         activeDocument.resizeCanvas(activeDocument.width.as('px') - 2, activeDocument.height.as('px') - 2, AnchorPosition.MIDDLECENTER);
@@ -196,14 +216,21 @@
         activeDocument.exportDocument(targetFile, ExportType.SAVEFORWEB, png24Options);  
     }
 
-    function exportNinePatch(dpiKeyword) {
+    function exportAssets(dpiKeyword) {
         try{
             activeDocument.activeHistoryState = activeDocument.historyStates.getByName ('_________');
         } catch(e) {
             activeDocument.suspendHistory('_________', '');
         }
-        ninePatchResize(density(dpiKeyword)/density(docDPI));
-        exportPNG(File(path.text + '/drawable-' + dpiKeyword + '/' + fileName.text + '.9.png'));
+        
+        if(ninePatch.value) {
+            ninePatchResize(density(dpiKeyword)/density(docDPI));
+            exportPNG(File(path.text + '/drawable-' + dpiKeyword + '/' + fileName.text + '.9.png'));
+        } else {
+            normalResize(density(dpiKeyword)/density(docDPI));
+            exportPNG(File(path.text + '/drawable-' + dpiKeyword + '/' + fileName.text + '.png'));
+        }
+        
         activeDocument.activeHistoryState = activeDocument.historyStates.getByName ('_________');
     }
 
