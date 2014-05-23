@@ -7,7 +7,7 @@
 *{margin:0;padding:0;}
 body{font:14px Corbel,Arial,sans-serif;color:#222;}
 td,th{padding:2px 4px;background:#eee;text-align:center;}
-th:nth-child(2),td:nth-child(2){border:1px solid #666;}
+/*th:nth-child(2),td:nth-child(2){border:1px solid #666;}*/
 .good td{background:#b2e79f;}
 .bad{background:#f35b53;}
 </style>
@@ -16,7 +16,7 @@ th:nth-child(2),td:nth-child(2){border:1px solid #666;}
 <table>
 <thead>
 	<tr>
-		<th>LDPI</th><th>MDPI</th><th>HDPI</th><th>XHDPI</th><th>XXHDPI</th>
+		<th>MDPI</th><th>HDPI</th><th>XHDPI</th><th>XXHDPI</th><th>XXXHDPI</th>
 	</tr>
 </thead>
 <tbody>
@@ -28,6 +28,7 @@ for(var i = 1; i <= 640; i++) {
 	var hdpi = Math.ceil(i*1.5);
 	var xhdpi = i*2;
 	var xxhdpi = i*3;
+	var xxxhdpi = i*4;
 
 	if(mdpi%2==0 && hdpi%2==0 && xhdpi%2==0 && xxhdpi%2==0) {
 		document.write('<tr class="good">');
@@ -35,7 +36,7 @@ for(var i = 1; i <= 640; i++) {
 		document.write('<tr>');
 	}
 
-	document.write('<td>' + ldpi + '</td>');
+	//document.write('<td>' + ldpi + '</td>');
 	document.write('<td>' + mdpi + '</td>');
 	if(hdpi != (i*1.5)) {
 		document.write('<td class="bad">' + hdpi + '</td>');
@@ -44,6 +45,7 @@ for(var i = 1; i <= 640; i++) {
 	}
 	document.write('<td>' + xhdpi + '</td>');
 	document.write('<td>' + xxhdpi + '</td>');
+	document.write('<td>' + xxxhdpi + '</td>');
 	document.write('</tr>');
 }
 </script>
