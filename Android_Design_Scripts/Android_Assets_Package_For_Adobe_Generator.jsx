@@ -1,8 +1,8 @@
 /**
-* @@@BUILDINFO@@@ Android_Asset_Package_For_Adobe_Generator.jsx !Version! Mon May 19 2014 16:47:16 GMT+0800
+* @@@BUILDINFO@@@ Android_Assets_Package_For_Adobe_Generator.jsx !Version! Fri Jun 06 2014 22:05:50 GMT+0800
 */
 /*
- * Android Asset Package For Adobe Generator
+ * Android Assets Package For Adobe Generator
  * 
  * First use "Android_Layer_Namer_For_Adobe_Generator.jsx" to generate assets, 
  * then use this script to move asset to right folders and change the file name in rightway.
@@ -18,16 +18,87 @@
     
     if(documents.length == 0)
         return;
-    
-    var root = activeDocument.path;
+        
+    var root;
+    try{
+        root = activeDocument.path;
+    }catch(e){
+        //root = Folder('~/Desktop').selectDlg();
+        root = '~/Desktop';
+    }    
     var psdNameWithoutExt = activeDocument.name.replace(/\.[^\.]+$/, '');
     var assetsPath = root + '/' + psdNameWithoutExt + '-assets';
-
     if(!Folder(assetsPath).exists)
         return;
-
+        
     var assets = Folder(assetsPath).getFiles();
-    if(assets != null) {
+    if(assets == null || assets.length == 0)
+        return;
+    
+    // Dialog ui.
+    var ui = 
+    "dialog {\
+        text: 'Android Assets Package For Adobe Generator',\
+        alignChildren: 'fill',\
+        replace: Group {\
+            orientation: 'column',\
+            alignChildren: 'left', \
+            label: StaticText { text: 'Replace Files:' },\
+            replaceType: DropDownList {}\
+        },\
+        assets: Group {\
+            orientation: 'column',\
+            alignChildren: 'left', \
+            label: StaticText { text: 'Assets:'},\
+            assetsList: ListBox {\
+                size: [300, 300], \
+                properties: { multiselect: true } \
+            }\
+        },\
+        separator2: Panel { preferredSize: [300, 0] },\
+        buttons: Group {\
+            orientation: 'row',\
+            cancelBtn: Button {\
+                alignment: ['right', 'center'], \
+                text: 'Cancel'\
+            },\
+            runBtn: Button {\
+                alignment: ['right', 'center'], \
+                text: 'OK'\
+            }\
+        }\
+    }";
+    
+    var assetsPackage = new Window(ui);
+    
+    // Assets List
+    var assetsList = assetsPackage.assets.assetsList;
+        assetsList.enabled = false;
+        for(var i = 0; i < assets.length; i++) {
+            assetsList.add('item', assets[i].name);
+        }
+        assetsList.onChange = function() {
+            $.writeln(assetsList.selection);
+        }
+    
+    // DropDownList
+    var replaceType = assetsPackage.replace.replaceType;
+        replaceType.add('item', 'Do Not Replace Files.');
+        //replaceType.add('item', 'Replace All Files.');
+        replaceType.add('item', 'User Choose.');
+        replaceType.selection = replaceType.items[0];
+        $.writeln('replaceType.selection.index ==' + replaceType.selection.index);
+        replaceType.onChange = function() {
+            if(this.selection.index == 1) {
+                assetsList.enabled = true;
+            } else {
+                assetsList.enabled = false;
+            }
+            $.writeln('replaceType.selection.index ==' + replaceType.selection.index);
+        }
+    
+    // Button event.
+    assetsPackage.buttons.runBtn.onClick = function() {
         // Create folders.
         if(!Folder(root + '/res').exists)
             Folder(root + '/res').create();
@@ -44,39 +115,52 @@
         
         // Move assets to res/drawable-[dpi] folder.
         for(var i = 0; i < assets.length; i++) {
-            if(/^mdpi_/i.test(assets[i].name)) {
-                assets[i].copy(root + '/res/drawable-mdpi/' + assets[i].name.replace(/^mdpi_/i, ''));
-                assets[i].remove();
+            if(/_mdpi/i.test(assets[i].name)) {
+                moveFile(assets[i], File(root + '/res/drawable-mdpi/' + assets[i].name.replace(/_mdpi/i, '')));
             }
-            if(/^hdpi_/i.test(assets[i].name)) {
-                assets[i].copy(root + '/res/drawable-hdpi/' + assets[i].name.replace(/^hdpi_/i, ''));
-                assets[i].remove();
+            if(/_hdpi/i.test(assets[i].name)) {
+                moveFile(assets[i], File(root + '/res/drawable-hdpi/' + assets[i].name.replace(/_hdpi/i, '')));
             }
-            if(/^xhdpi_/i.test(assets[i].name)) {
-                assets[i].copy(root + '/res/drawable-xhdpi/' + assets[i].name.replace(/^xhdpi_/i, ''));
-                assets[i].remove();
+            if(/_xhdpi/i.test(assets[i].name)) {
+                moveFile(assets[i], File(root + '/res/drawable-xhdpi/' + assets[i].name.replace(/_xhdpi/i, '')));
             }
-            if(/^xxhdpi_/i.test(assets[i].name)) {
-                assets[i].copy(root + '/res/drawable-xxhdpi/' + assets[i].name.replace(/^xxhdpi_/i, ''));
-                assets[i].remove();
+            if(/_xxhdpi/i.test(assets[i].name)) {
+                moveFile(assets[i], File(root + '/res/drawable-xxhdpi/' + assets[i].name.replace(/_xxhdpi/i, '')));
             }
-            if(/^xxxhdpi_/i.test(assets[i].name)) {
-                assets[i].copy(root + '/res/drawable-xxxhdpi/' + assets[i].name.replace(/^xxxhdpi_/i, ''));
-                assets[i].remove();
+            if(/_xxxhdpi/i.test(assets[i].name)) {
+                moveFile(assets[i], File(root + '/res/drawable-xxxhdpi/' + assets[i].name.replace(/_xxxhdpi/i, '')));
+            }
+            
+            function moveFile(fileFrom, fileTo) {
+                if(
+                    // Do Not Replace Files.
+                    (replaceType.selection.index == 0 && !fileTo.exites)
+                    ||
+                    // User Choose.
+                    (replaceType.selection.index == 1 && assetsList.selection.toString().indexOf(fileFrom.name) >= 0)
+                ){
+                    $.writeln(fileFrom + '-->' + fileTo);
+                    fileFrom.copy(fileTo);
+                    fileFrom.remove();
+                }
             }
         }
-
+    
         // Remove empty folders.
-        if(!Folder(root + '/res/drawable-mdpi').getFiles())
+        if(Folder(root + '/res/drawable-mdpi').getFiles().length == 0)
             Folder(root + '/res/drawable-mdpi').remove();
-        if(!Folder(root + '/res/drawable-hdpi').getFiles())
+        if(Folder(root + '/res/drawable-hdpi').getFiles() == 0)
             Folder(root + '/res/drawable-hdpi').remove();
-        if(!Folder(root + '/res/drawable-xhdpi').getFiles())
+        if(Folder(root + '/res/drawable-xhdpi').getFiles() == 0)
             Folder(root + '/res/drawable-xhdpi').remove();
-        if(!Folder(root + '/res/drawable-xxhdpi').getFiles())
+        if(Folder(root + '/res/drawable-xxhdpi').getFiles() == 0)
             Folder(root + '/res/drawable-xxhdpi').remove();
-        if(!Folder(root + '/res/drawable-xxxhdpi').getFiles())
+        if(Folder(root + '/res/drawable-xxxhdpi').getFiles() == 0)
             Folder(root + '/res/drawable-xxxhdpi').remove();
+        
+        assetsPackage.close();
     }
+    
+    assetsPackage.show();
 
 })();

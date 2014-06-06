@@ -1,10 +1,10 @@
 /**
-* @@@BUILDINFO@@@ Android_Layer_Namer_For_Adobe_Generator.jsx !Version! Mon May 19 2014 16:47:07 GMT+0800
+* @@@BUILDINFO@@@ Android_Layer_Namer_For_Adobe_Generator.jsx !Version! Fri Jun 06 2014 19:22:46 GMT+0800
 */
 /*
  * Android Layer Namer For Adobe Generator
  * 
- * Rename layer like 'mdpi-x.png, 150% hdpi-x.png', then generate multi density assets.
+ * Rename layer like 'x_mdpi.png, 150% x_hdpi.png', then generate multi density assets.
  * After asset generated use 'Android_Asset_Package_For_Adobe_Generator.jsx' to put assets to 
  * different folder, and change the file name.
  *
@@ -21,8 +21,8 @@
         return;
     
     // Default dpi config.
-    var psdDPI = 'MDPI';
-    //var psdDPI = 'XHDPI';
+    //var psdDPI = 'MDPI';
+    var psdDPI = 'XHDPI';
 
     // Get dpi from document name.
     if(/\_(mdpi).(psd|pdd|psb)$/i.test(activeDocument.name))
@@ -99,7 +99,8 @@
         
         function getLayerName() {
             var ln = activeDocument.activeLayer.name.split(',');
-            return ln[0].replace(/(\d+% )?(mdpi|hdpi|xhdpi|xxhdpi|xxxhdpi)(-|_)/i, '');
+            //return ln[0].replace(/(\d+% )?(mdpi|hdpi|xhdpi|xxhdpi|xxxhdpi)(-|_)/i, '');
+            return ln[0].replace(/(\d+% )?/, '').replace(/(-|_)(mdpi|hdpi|xhdpi|xxhdpi|xxxhdpi)/i, '');
         }
 
     var mdpi = layerRenamer.output.dpis.MPDI;
@@ -113,38 +114,49 @@
         
         var inputLayerName = layerName.text;
         
+        var fileName = inputLayerName.replace(/.(gif|jpg|png|9.png)$/i, '');
+        var fileExt = inputLayerName.replace(fileName, '');
+        
         var newName = [];
         
         if(psdDPI == 'MDPI') {
             if(mdpi.value)
-                newName.push('mdpi_' + inputLayerName);
+                //newName.push('mdpi_' + inputLayerName);
+                newName.push('' + fileName + '_mdpi' + fileExt);
             if(hdpi.value)
-                newName.push('150% hdpi_' + inputLayerName);
+                //newName.push('150% hdpi_' + inputLayerName);
+                newName.push('150% ' + fileName + '_hdpi' + fileExt);
             if(xhdpi.value)
-                newName.push('200% xhdpi_' + inputLayerName);
+                //newName.push('200% xhdpi_' + inputLayerName);
+                newName.push('200% ' + fileName + '_xhdpi' + fileExt);
             if(xxhdpi.value)
-                newName.push('300% xxhdpi_' + inputLayerName);
+                //newName.push('300% xxhdpi_' + inputLayerName);
+                newName.push('300% ' + fileName + '_xxhdpi' + fileExt);
             if(xxxhdpi.value)
-                newName.push('400% xxxhdpi_' + inputLayerName);
+                //newName.push('400% xxxhdpi_' + inputLayerName);
+                newName.push('400% ' + fileName + '_xxxhdpi' + fileExt);
         }
         if(psdDPI == 'XHDPI') {
             if(mdpi.value)
-                newName.push('50% mdpi_' + inputLayerName);
+                //newName.push('50% mdpi_' + inputLayerName);
+                newName.push('50% ' + fileName + '_mdpi' + fileExt);
             if(hdpi.value)
-                newName.push('75% hdpi_' + inputLayerName);
+                //newName.push('75% hdpi_' + inputLayerName);
+                newName.push('75% ' + fileName + '_hdpi' + fileExt);
             if(xhdpi.value)
-                newName.push('xhdpi_' + inputLayerName);
+                //newName.push('xhdpi_' + inputLayerName);
+                newName.push('' + fileName + '_xhdpi' + fileExt);
             if(xxhdpi.value)
-                newName.push('150% xxhdpi_' + inputLayerName);
+                //newName.push('150% xxhdpi_' + inputLayerName);
+                newName.push('150% ' + fileName + '_xxhdpi' + fileExt);
             if(xxxhdpi.value)
-                newName.push('200% xxxhdpi_' + inputLayerName);
+                //newName.push('200% xxxhdpi_' + inputLayerName);
+                newName.push('200% ' + fileName + '_xxxhdpi' + fileExt);
         }
         
         $.writeln(newName);
         
         activeDocument.activeLayer.name = newName.join(', ');
-        
-        //app.refresh();
         
         layerRenamer.close();
     }
