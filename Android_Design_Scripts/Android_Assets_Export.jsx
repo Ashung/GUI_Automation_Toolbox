@@ -1,5 +1,5 @@
 /**
-* @@@BUILDINFO@@@ Android_Asset_Export.jsx !Version! Tue May 20 2014 10:44:42 GMT+0800
+* @@@BUILDINFO@@@ Android_Assets_Export.jsx !Version! Thu Jun 12 2014 12:14:47 GMT+0800
 */
 /*
  * Android Assets Export
@@ -201,6 +201,24 @@
         activeDocument.resizeCanvas(activeDocument.width.as('px') - 2, activeDocument.height.as('px') - 2, AnchorPosition.MIDDLECENTER);
         activeDocument.resizeImage(Math.ceil(activeDocument.width.as('px') * scale), Math.ceil(activeDocument.height.as('px') * scale), 72, ResampleMethod.NEARESTNEIGHBOR);
         activeDocument.resizeCanvas(activeDocument.width.as('px') + 2, activeDocument.height.as('px') + 2, AnchorPosition.MIDDLECENTER);
+    }
+
+    function resize(width, height) {
+        var idImgS = charIDToTypeID( "ImgS" );
+        var desc1 = new ActionDescriptor();
+        var idWdth = charIDToTypeID( "Wdth" );
+        var idPxl = charIDToTypeID( "#Pxl" );
+            desc1.putUnitDouble( idWdth, idPxl, width );
+            desc1.putUnitDouble( idHeight, idPxl, height );
+        var idscaleStyles = stringIDToTypeID( "scaleStyles" );
+            desc1.putBoolean( idscaleStyles, true );
+        var idCnsP = charIDToTypeID( "CnsP" );
+            desc1.putBoolean( idCnsP, true );
+        var idIntr = charIDToTypeID( "Intr" );
+        var idIntp = charIDToTypeID( "Intp" );
+        var idNrst = charIDToTypeID( "Nrst" );
+            desc1.putEnumerated( idIntr, idIntp, idNrst );
+        executeAction( idImgS, desc1, DialogModes.NO );
     }
 
     function exportPNG(targetFile) {

@@ -70,3 +70,30 @@ function selectTool(tool) {
     executeAction( app.charIDToTypeID('slct'), desc9, DialogModes.NO );
 };
 
+
+_Ps._Windows._History._NewSnapShot(name) {
+    var idMk = charIDToTypeID("Mk  ");
+    var desc1 = new ActionDescriptor();
+    var idnull = charIDToTypeID("null");
+    var ref1 = new ActionReference();
+    var idSnpS = charIDToTypeID("SnpS");
+        ref1.putClass( idSnpS );
+        desc1.putReference(idnull, ref1);
+    var idFrom = charIDToTypeID("From");
+    var ref2 = new ActionReference();
+    var idHstS = charIDToTypeID("HstS");
+    var idCrnH = charIDToTypeID("CrnH");
+        ref2.putProperty(idHstS, idCrnH);
+        desc1.putReference(idFrom, ref2);
+    var idNm = charIDToTypeID("Nm  ");
+        desc1.putString(idNm, name);
+    var idUsng = charIDToTypeID("Usng");
+    var idHstS = charIDToTypeID("HstS");
+    var idFllD = charIDToTypeID("FllD");
+        desc1.putEnumerated(idUsng, idHstS, idFllD);
+        executeAction(idMk, desc1, DialogModes.NO);
+}
+
+
+
+
