@@ -1,5 +1,5 @@
 /**
-* @@@BUILDINFO@@@ Android_Assets_Export.jsx !Version! Thu Jun 12 2014 12:14:47 GMT+0800
+* @@@BUILDINFO@@@ Android_Assets_Export.jsx !Version! Mon Jun 30 2014 20:48:10 GMT+0800
 */
 /*
  * Android Assets Export
@@ -13,12 +13,14 @@
 (function(){
     'use strict'
 
-    if(documents.length == 0)
+    if(documents.length == 0) {
+        $.writeln('NO DOCUMENTS!');
         return;
+    }
         
     // Default dpi config.
-    //var psdDPI = 'mdpi';
-    var psdDPI = 'xhdpi';
+    var psdDPI = 'mdpi';
+    //var psdDPI = 'xhdpi';
 
     var ui = 
     "dialog {\
@@ -118,7 +120,7 @@
     // Initialize File Name
     fileName.text = activeDocument.activeLayer.name;
     
-    //
+    // NinePatch
     var ninePatch = NinePatchResize.ninePatch.checkboxNinePatch;
     
     // Initialize Export DPI
@@ -138,30 +140,35 @@
         // Create Folders
         if(!Folder(path.text).exists)
             Folder(path.text).create();
-        if(!Folder(path.text + '/drawable-mdpi').exists)
-            Folder(path.text + '/drawable-mdpi').create();
-        if(!Folder(path.text + '/drawable-hdpi').exists)
-            Folder(path.text + '/drawable-hdpi').create();
-        if(!Folder(path.text + '/drawable-xhdpi').exists)
-            Folder(path.text + '/drawable-xhdpi').create();
-        if(!Folder(path.text + '/drawable-xxhdpi').exists)
-            Folder(path.text + '/drawable-xxhdpi').create();
-        if(!Folder(path.text + '/drawable-xxxhdpi').exists)
-            Folder(path.text + '/drawable-xxxhdpi').create();
-            
+
         if(mdpi.value) {
+            if(!Folder(path.text + '/drawable-mdpi').exists) {
+                Folder(path.text + '/drawable-mdpi').create();
+            }
             exportAssets('mdpi');
         }
         if(hdpi.value) {
+            if(!Folder(path.text + '/drawable-hdpi').exists) {
+                Folder(path.text + '/drawable-hdpi').create();
+            }
             exportAssets('hdpi');
         }
         if(xhdpi.value) {
+            if(!Folder(path.text + '/drawable-xhdpi').exists) {
+                Folder(path.text + '/drawable-xhdpi').create();
+            }
             exportAssets('xhdpi');
         }
         if(xxhdpi.value) {
+            if(!Folder(path.text + '/drawable-xxhdpi').exists) {
+                Folder(path.text + '/drawable-xxhdpi').create();
+            }
             exportAssets('xxhdpi');
         }
         if(xxxhdpi.value) {
+            if(!Folder(path.text + '/drawable-xxxhdpi').exists) {
+                Folder(path.text + '/drawable-xxxhdpi').create();
+            }
             exportAssets('xxxhdpi');
         }
     
@@ -193,38 +200,28 @@
 
     function normalResize(scale) {
         $.writeln('Scale: x' +  scale);
-        activeDocument.resizeImage(Math.ceil(activeDocument.width.as('px') * scale), Math.ceil(activeDocument.height.as('px') * scale), 72, ResampleMethod.NEARESTNEIGHBOR);
+        resize(scale);
     }
     
     function ninePatchResize(scale) {
         $.writeln('Scale: x' +  scale);
         activeDocument.resizeCanvas(activeDocument.width.as('px') - 2, activeDocument.height.as('px') - 2, AnchorPosition.MIDDLECENTER);
-        activeDocument.resizeImage(Math.ceil(activeDocument.width.as('px') * scale), Math.ceil(activeDocument.height.as('px') * scale), 72, ResampleMethod.NEARESTNEIGHBOR);
+        resize(scale);
         activeDocument.resizeCanvas(activeDocument.width.as('px') + 2, activeDocument.height.as('px') + 2, AnchorPosition.MIDDLECENTER);
     }
 
-    function resize(width, height) {
-        var idImgS = charIDToTypeID( "ImgS" );
+    function resize(scale) {
         var desc1 = new ActionDescriptor();
-        var idWdth = charIDToTypeID( "Wdth" );
-        var idPxl = charIDToTypeID( "#Pxl" );
-            desc1.putUnitDouble( idWdth, idPxl, width );
-            desc1.putUnitDouble( idHeight, idPxl, height );
-        var idscaleStyles = stringIDToTypeID( "scaleStyles" );
-            desc1.putBoolean( idscaleStyles, true );
-        var idCnsP = charIDToTypeID( "CnsP" );
-            desc1.putBoolean( idCnsP, true );
-        var idIntr = charIDToTypeID( "Intr" );
-        var idIntp = charIDToTypeID( "Intp" );
-        var idNrst = charIDToTypeID( "Nrst" );
-            desc1.putEnumerated( idIntr, idIntp, idNrst );
-        executeAction( idImgS, desc1, DialogModes.NO );
+            desc1.putUnitDouble(charIDToTypeID('Wdth'), charIDToTypeID('#Prc'), scale * 100);
+            desc1.putBoolean(stringIDToTypeID("scaleStyles"), true);
+            desc1.putBoolean(charIDToTypeID('CnsP'), true);
+            desc1.putEnumerated(charIDToTypeID('Intr'), charIDToTypeID('Intp'), charIDToTypeID('Blnr'));
+        executeAction(stringIDToTypeID('imageSize'), desc1, DialogModes.NO);
     }
 
     function exportPNG(targetFile) {
         $.writeln('Export PNG to:' +  targetFile);
         // PNG-24 Settings
-        activeDocument.info = null;
         var png24Options = new ExportOptionsSaveForWeb();
             png24Options.format = SaveDocumentType.PNG;
             png24Options.PNG8 = false;

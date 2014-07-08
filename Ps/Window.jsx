@@ -74,23 +74,14 @@ function selectTool(tool) {
 _Ps._Windows._History._NewSnapShot(name) {
     var idMk = charIDToTypeID("Mk  ");
     var desc1 = new ActionDescriptor();
-    var idnull = charIDToTypeID("null");
     var ref1 = new ActionReference();
-    var idSnpS = charIDToTypeID("SnpS");
-        ref1.putClass( idSnpS );
-        desc1.putReference(idnull, ref1);
-    var idFrom = charIDToTypeID("From");
+        ref1.putClass(charIDToTypeID("SnpS"));
+        desc1.putReference(charIDToTypeID("null"), ref1);
     var ref2 = new ActionReference();
-    var idHstS = charIDToTypeID("HstS");
-    var idCrnH = charIDToTypeID("CrnH");
-        ref2.putProperty(idHstS, idCrnH);
-        desc1.putReference(idFrom, ref2);
-    var idNm = charIDToTypeID("Nm  ");
-        desc1.putString(idNm, name);
-    var idUsng = charIDToTypeID("Usng");
-    var idHstS = charIDToTypeID("HstS");
-    var idFllD = charIDToTypeID("FllD");
-        desc1.putEnumerated(idUsng, idHstS, idFllD);
+        ref2.putProperty(charIDToTypeID("HstS"), charIDToTypeID("CrnH"));
+        desc1.putReference(charIDToTypeID("From"), ref2);
+        desc1.putString(charIDToTypeID("Nm  "), name);
+        desc1.putEnumerated(charIDToTypeID("Usng"), charIDToTypeID("HstS"), charIDToTypeID("FllD"));
         executeAction(idMk, desc1, DialogModes.NO);
 }
 

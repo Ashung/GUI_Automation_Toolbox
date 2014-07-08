@@ -16,9 +16,11 @@
 (function(){
     'use strict'
     
-    if(documents.length == 0)
+    if(documents.length == 0) {
+        $.writeln('NO DOCUMENTS!');
         return;
-        
+    }
+
     var root;
     try{
         root = activeDocument.path;
@@ -28,12 +30,16 @@
     }    
     var psdNameWithoutExt = activeDocument.name.replace(/\.[^\.]+$/, '');
     var assetsPath = root + '/' + psdNameWithoutExt + '-assets';
-    if(!Folder(assetsPath).exists)
+    if(!Folder(assetsPath).exists) {
+        $.writeln('NO ASSETS FOLDER!');
         return;
+    }
         
     var assets = Folder(assetsPath).getFiles();
-    if(assets == null || assets.length == 0)
+    if(assets == null || assets.length == 0) {
+        $.writeln('ASSETS FOLDER HAVE NO FILES!');
         return;
+    }
     
     // Dialog ui.
     var ui = 

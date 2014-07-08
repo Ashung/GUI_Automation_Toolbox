@@ -1,5 +1,5 @@
 /**
-* @@@BUILDINFO@@@ Android_Layer_Namer_For_Adobe_Generator.jsx !Version! Fri Jun 06 2014 19:22:46 GMT+0800
+* @@@BUILDINFO@@@ Android_Layer_Namer_For_Adobe_Generator.jsx !Version! Mon Jun 30 2014 21:14:42 GMT+0800
 */
 /*
  * Android Layer Namer For Adobe Generator
@@ -17,12 +17,14 @@
 (function(){
     'use strict'
 
-    if(documents.length == 0)
+    if(documents.length == 0) {
+        $.writeln('NO DOCUMENTS!');
         return;
+    }
     
     // Default dpi config.
-    //var psdDPI = 'MDPI';
-    var psdDPI = 'XHDPI';
+    //var defaultDPI = 'MDPI';
+    var defaultDPI = 'XHDPI';
 
     // Get dpi from document name.
     if(/\_(mdpi).(psd|pdd|psb)$/i.test(activeDocument.name))
@@ -35,15 +37,18 @@
     "dialog {\
         text: 'Android Layer Namer For Adobe Generator',\
         alignChildren: 'fill',\
-        intro: Group { \
-            alignChildren: 'left',\
-            content: StaticText { text: 'Your document is " + psdDPI +".'} \
-        }, \
-        separator1: Panel { preferredSize: [300, 0] },\
+        docDPI: Group {\
+            orientation: 'column',\
+            alignChildren: 'left', \
+            labelFiles: StaticText { text: 'Your document DPI:' },\
+            docDPIList: DropDownList {\
+                size: [300, 25] \
+            }\
+        },\
         layerName: Group {\
             orientation: 'column',\
             alignChildren: 'left', \
-            labelFiles: StaticText { text: 'Layer name like \"icon.png, photo.jpg\":' },\
+            labelFiles: StaticText { text: 'Layer name like \"icon.png\", \"photo.jpg\":' },\
             layerNameText: EditText {\
                 size: [300, 25] \
             }\
@@ -92,9 +97,22 @@
 
     var layerRenamer = new Window(ui);
 
+    // Initialize docDPI DropDownList
+    var docDPIList = layerRenamer.docDPI.docDPIList;
+        docDPIList.add('item', 'MDPI');
+        docDPIList.add('item', 'XHDPI');
+    var docDPI;    
+    for(var i = 0; i < docDPIList.items.length; i ++) {
+        if(docDPIList.items[i].text == defaultDPI) {
+            docDPIList.selection = docDPIList.items[i];
+            docDPI = docDPIList.selection.text;
+        }
+    }    
+    docDPIList.onChange = function() {
+        docDPI = docDPIList.selection.text;
+    }    
+
     var layerName = layerRenamer.layerName.layerNameText;
-        //layerName.text = activeDocument.activeLayer.name;
-        
         layerName.text = getLayerName();
         
         function getLayerName() {
@@ -102,6 +120,7 @@
             //return ln[0].replace(/(\d+% )?(mdpi|hdpi|xhdpi|xxhdpi|xxxhdpi)(-|_)/i, '');
             return ln[0].replace(/(\d+% )?/, '').replace(/(-|_)(mdpi|hdpi|xhdpi|xxhdpi|xxxhdpi)/i, '');
         }
+
 
     var mdpi = layerRenamer.output.dpis.MPDI;
     var hdpi = layerRenamer.output.dpis.HPDI;
@@ -119,7 +138,7 @@
         
         var newName = [];
         
-        if(psdDPI == 'MDPI') {
+        if(docDPI == 'MDPI') {
             if(mdpi.value)
                 //newName.push('mdpi_' + inputLayerName);
                 newName.push('' + fileName + '_mdpi' + fileExt);
@@ -136,7 +155,7 @@
                 //newName.push('400% xxxhdpi_' + inputLayerName);
                 newName.push('400% ' + fileName + '_xxxhdpi' + fileExt);
         }
-        if(psdDPI == 'XHDPI') {
+        if(docDPI == 'XHDPI') {
             if(mdpi.value)
                 //newName.push('50% mdpi_' + inputLayerName);
                 newName.push('50% ' + fileName + '_mdpi' + fileExt);
