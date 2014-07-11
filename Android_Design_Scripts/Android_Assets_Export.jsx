@@ -20,7 +20,6 @@
         
     // Default dpi config.
     var psdDPI = 'mdpi';
-    //var psdDPI = 'xhdpi';
 
     var ui = 
     "dialog {\
@@ -110,7 +109,17 @@
     }
 
     // Initialize Path
-    path.text = Folder.desktop.fullName + '/res';
+    try {
+        //path.text = String(activeDocument.path).replace(/\/drawable-(mdpi|hdpi|xhdpi|xxhdpi|xxxhdpi)/i, '');
+        path.text = activeDocument.path + '/res';
+        
+    } catch(e) {
+        path.text = Folder.desktop.fullName + '/res';
+       //$.writeln(path.text) 
+    }
+    
+   
+    
     browser.onClick = function() {
         var f = Folder(path.text).selectDlg('Select the "res" folder:');
         if(f != null)
@@ -119,7 +128,7 @@
 
     // Initialize File Name
     fileName.text = activeDocument.activeLayer.name;
-    
+
     // NinePatch
     var ninePatch = NinePatchResize.ninePatch.checkboxNinePatch;
     
@@ -206,16 +215,21 @@
     function ninePatchResize(scale) {
         $.writeln('Scale: x' +  scale);
         activeDocument.resizeCanvas(activeDocument.width.as('px') - 2, activeDocument.height.as('px') - 2, AnchorPosition.MIDDLECENTER);
-        resize(scale);
+        resize(scale, 'Nrst');
         activeDocument.resizeCanvas(activeDocument.width.as('px') + 2, activeDocument.height.as('px') + 2, AnchorPosition.MIDDLECENTER);
     }
 
-    function resize(scale) {
+    // Blnr, Nrst, Bcbc, bicubicSmoother, bicubicSharper, automaticInterpolation, 
+    function resize(scale, resampleCharID) {
+        if(resampleCharID == undefined) {
+            resampleCharID = 'Blnr';
+        }
+
         var desc1 = new ActionDescriptor();
             desc1.putUnitDouble(charIDToTypeID('Wdth'), charIDToTypeID('#Prc'), scale * 100);
             desc1.putBoolean(stringIDToTypeID("scaleStyles"), true);
             desc1.putBoolean(charIDToTypeID('CnsP'), true);
-            desc1.putEnumerated(charIDToTypeID('Intr'), charIDToTypeID('Intp'), charIDToTypeID('Blnr'));
+            desc1.putEnumerated(charIDToTypeID('Intr'), charIDToTypeID('Intp'), charIDToTypeID(resampleCharID));
         executeAction(stringIDToTypeID('imageSize'), desc1, DialogModes.NO);
     }
 
@@ -240,10 +254,12 @@
         
         if(ninePatch.value) {
             ninePatchResize(density(dpiKeyword)/density(docDPI));
-            exportPNG(File(path.text + '/drawable-' + dpiKeyword + '/' + fileName.text + '.9.png'));
+            var targetFile = File(path.text + '/drawable-' + dpiKeyword + '/' + fileName.text + '.9.png');
+            exportPNG(targetFile);
         } else {
             normalResize(density(dpiKeyword)/density(docDPI));
-            exportPNG(File(path.text + '/drawable-' + dpiKeyword + '/' + fileName.text + '.png'));
+            var targetFile = File(path.text + '/drawable-' + dpiKeyword + '/' + fileName.text + '.png');
+            exportPNG(targetFile);
         }
         
         activeDocument.activeHistoryState = activeDocument.historyStates.getByName ('_________');

@@ -28,7 +28,7 @@ Photoshop CC 14.2下Generator图层命名脚本. 将图层自动命名为`x_mdpi
 ####Android_Assets_Package_For_Adobe_Generator.jsx
 自动将Generator生成的xxx-assets目录下的资源打包到res/drawable-?dpi目录下.
 
-**注意**: 如果无assets目录或者目录下无文件, 脚本将不允许. 具体信息查看ExtendScript Toolkit的Console窗口.
+**注意**: 如果无assets目录或目录下无文件, 脚本将不运行. 具体信息查看ExtendScript Toolkit的Console窗口.
 
 1. 运行脚本.
 2. 选择"不替换文件"或"用户选择". 选择"用户选择"后文件列表将列出所有文件, 选中的文件将会被打包至res目录并替换已有文件.

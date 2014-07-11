@@ -32,9 +32,6 @@ _Ps._Image._Image_Size = function(width, height, resolution, resample, scaleStyl
         case ResampleMethod.BICUBIC:
             idResample = charIDToTypeID("Bcbc");
             break;
-        case ResampleMethod.BICUBIC:
-            idResample = charIDToTypeID("Bcbc");
-            break;
         case ResampleMethod.BILINEAR:
             idResample = charIDToTypeID("Blnr");
             break;
