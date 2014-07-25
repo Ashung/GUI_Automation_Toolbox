@@ -87,14 +87,18 @@
         }\
     }";
    
-    var NinePatchResize = new Window(ui);
+    var AAE = new Window(ui);
     
-    var docDPIList = NinePatchResize.docDPI.docDPIList;
+    var docDPIList = AAE.docDPI.docDPIList;
     var docDPI;
-    var path = NinePatchResize.exportPath.pathFormItem.pathText;
-    var browser = NinePatchResize.exportPath.pathFormItem.pathBrowser;
-    var fileName = NinePatchResize.exportFileName.fileNameText;
+    var path = AAE.exportPath.pathFormItem.pathText;
+    var browser = AAE.exportPath.pathFormItem.pathBrowser;
+    var fileName = AAE.exportFileName.fileNameText;
     var dpis = ['mdpi', 'hdpi', 'xhdpi', 'xxhdpi', 'xxxhdpi'];
+    
+    var firstTimeRun = true;
+    var d = new Date();
+    var timeStamp = d.getTime();
     
     // Initialize docDPI DropDownList
     for(var i = 0; i < dpis.length; i ++) {
@@ -118,8 +122,6 @@
        //$.writeln(path.text) 
     }
     
-   
-    
     browser.onClick = function() {
         var f = Folder(path.text).selectDlg('Select the "res" folder:');
         if(f != null)
@@ -130,7 +132,7 @@
     fileName.text = activeDocument.activeLayer.name;
 
     // NinePatch
-    var ninePatch = NinePatchResize.ninePatch.checkboxNinePatch;
+    var ninePatch = AAE.ninePatch.checkboxNinePatch;
     
     // Initialize Export DPI
     var mdpi, hdpi, xhdpi, xxhdpi, xxxhdpi;
@@ -138,13 +140,13 @@
         makeCheckBox(dpis[i]);
     }
     function makeCheckBox(dpi) {
-        eval('NinePatchResize.exportDPI.dpis.' + dpi + ' = NinePatchResize.exportDPI.dpis.add("Checkbox", undefined, "' + dpi + '")');
-        eval('NinePatchResize.exportDPI.dpis.' + dpi + '.value = true');
-        eval(dpi + ' = NinePatchResize.exportDPI.dpis.' + dpi);
+        eval('AAE.exportDPI.dpis.' + dpi + ' = AAE.exportDPI.dpis.add("Checkbox", undefined, "' + dpi + '")');
+        eval('AAE.exportDPI.dpis.' + dpi + '.value = true');
+        eval(dpi + ' = AAE.exportDPI.dpis.' + dpi);
     }
     
     // Button event.
-    NinePatchResize.buttons.runBtn.onClick = function() {
+    AAE.buttons.runBtn.onClick = function() {
         
         // Create Folders
         if(!Folder(path.text).exists)
@@ -183,10 +185,10 @@
     
         $.writeln('Completed!');
         
-        NinePatchResize.close();
+        AAE.close();
     }
     
-    NinePatchResize.show();
+    AAE.show();
     
     function density(dpiKeyword) {
         switch(dpiKeyword.toLowerCase()) {
@@ -246,10 +248,8 @@
     }
 
     function exportAssets(dpiKeyword) {
-        try{
-            activeDocument.activeHistoryState = activeDocument.historyStates.getByName ('_________');
-        } catch(e) {
-            activeDocument.suspendHistory('_________', '');
+        if(firstTimeRun) {
+            activeDocument.suspendHistory('_____' + timeStamp, '');
         }
         
         if(ninePatch.value) {
@@ -262,7 +262,8 @@
             exportPNG(targetFile);
         }
         
-        activeDocument.activeHistoryState = activeDocument.historyStates.getByName ('_________');
+        firstTimeRun = false;
+        activeDocument.activeHistoryState = activeDocument.historyStates.getByName ('_____' + timeStamp);
     }
 
 })();

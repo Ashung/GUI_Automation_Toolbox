@@ -23,8 +23,8 @@
     }
     
     // Default dpi config.
-    //var defaultDPI = 'MDPI';
-    var defaultDPI = 'XHDPI';
+    var defaultDPI = 'MDPI';
+    //var defaultDPI = 'XHDPI';
 
     // Get dpi from document name.
     if(/\_(mdpi).(psd|pdd|psb)$/i.test(activeDocument.name))
