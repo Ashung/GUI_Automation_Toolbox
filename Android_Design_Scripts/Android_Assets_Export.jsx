@@ -1,5 +1,5 @@
 /**
-* @@@BUILDINFO@@@ Android_Assets_Export.jsx !Version! Mon Jun 30 2014 20:48:10 GMT+0800
+* @@@BUILDINFO@@@ Android_Assets_Export.jsx !Version! Tue Jul 29 2014 11:27:21 GMT+0800
 */
 /*
  * Android Assets Export
@@ -72,6 +72,10 @@
             dpis: Group {\
                 orientation: 'row' \
             }\
+            nodpi: Checkbox {\
+                value: false,\
+                text: 'nodpi'\
+            }\
         },\
         separator2: Panel { preferredSize: [300, 0] },\
         buttons: Group {\
@@ -114,12 +118,13 @@
 
     // Initialize Path
     try {
-        //path.text = String(activeDocument.path).replace(/\/drawable-(mdpi|hdpi|xhdpi|xxhdpi|xxxhdpi)/i, '');
-        path.text = activeDocument.path + '/res';
-        
+        if(/\/drawable-(nodpi|ldpi|mdpi|hdpi|xhdpi|xxhdpi|xxxhdpi)/i.test(String(activeDocument.path))) {
+            path.text = String(activeDocument.path).replace(/\/drawable-(nodpi|ldpi|mdpi|hdpi|xhdpi|xxhdpi|xxxhdpi)/i, '');
+        } else {
+            path.text = activeDocument.path + '/res';
+        }
     } catch(e) {
         path.text = Folder.desktop.fullName + '/res';
-       //$.writeln(path.text) 
     }
     
     browser.onClick = function() {
@@ -130,12 +135,20 @@
 
     // Initialize File Name
     fileName.text = activeDocument.activeLayer.name;
+    // For images files
+    if(/.(9.png|png|jpg|gif)$/i.test(activeDocument.name)) {
+        fileName.text = activeDocument.name.replace(/.(9.png|png|jpg|gif)$/i, '');
+    }
 
     // NinePatch
     var ninePatch = AAE.ninePatch.checkboxNinePatch;
+    if(/.(9.png)$/i.test(activeDocument.name)) {
+        ninePatch.value = true;
+    }
     
     // Initialize Export DPI
     var mdpi, hdpi, xhdpi, xxhdpi, xxxhdpi;
+    var nodpi = AAE.exportDPI.nodpi;
     for(var i = 0; i < dpis.length; i ++) {
         makeCheckBox(dpis[i]);
     }
@@ -151,6 +164,13 @@
         // Create Folders
         if(!Folder(path.text).exists)
             Folder(path.text).create();
+        
+        if(nodpi.value) {
+            if(!Folder(path.text + '/drawable-nodpi').exists) {
+                Folder(path.text + '/drawable-nodpi').create();
+            }
+            exportAssets('nodpi');
+        }
 
         if(mdpi.value) {
             if(!Folder(path.text + '/drawable-mdpi').exists) {
@@ -192,6 +212,8 @@
     
     function density(dpiKeyword) {
         switch(dpiKeyword.toLowerCase()) {
+            case 'nodpi':
+                return density(docDPI);
             case 'ldpi':
                 return 120;
             case 'mdpi':
@@ -249,7 +271,7 @@
 
     function exportAssets(dpiKeyword) {
         if(firstTimeRun) {
-            activeDocument.suspendHistory('_____' + timeStamp, '');
+            activeDocument.suspendHistory('__' + docDPI + '__' + timeStamp, '');
         }
         
         if(ninePatch.value) {
@@ -263,7 +285,7 @@
         }
         
         firstTimeRun = false;
-        activeDocument.activeHistoryState = activeDocument.historyStates.getByName ('_____' + timeStamp);
+        activeDocument.activeHistoryState = activeDocument.historyStates.getByName ('__' + docDPI + '__' + timeStamp);
     }
 
 })();
