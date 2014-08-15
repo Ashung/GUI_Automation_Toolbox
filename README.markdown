@@ -3,6 +3,15 @@
 Photoshop script for smart designer.
 
 ###Android Design Scripts
+
+####Android_App_Icons_Template.jsx & Android_App_Icons_Template_Export.jsx
+用于自动生成Android App图标模板和导出图标.
+
+1, 运行Android_App_Icons_Template.jsx生成Android App图标模板.
+2, 在图标设计完成后, 运行Android_App_Icons_Template_Export.jsx, 将自动导出图标到'psd_file_name/res/'目录下(文件未保存将导出到桌面).
+
+---
+
 ####Android_Assets_Export.jsx
 用于资源导出Android各种DPI资源PNG及.9.PNG.
 
@@ -13,6 +22,8 @@ Photoshop script for smart designer.
 5. 输入文件名, 不需要包括后缀(.png/.9.png). 建议文件名使用'_'替换空格.
 6. 如果图片是9Patch图片, 需要勾选此项. 必须Patch区黑线长, 黑线间距离, 黑线与边沿距离为偶数dp数值. 例如MDPI的PSD数值为2n PX(偶数), XHDPI的PSD数值为4n PX.
 7. 勾选需要导出的DPI资源. 点击OK.
+
+---
 
 ####Android_Layer_Namer_For_Adobe_Generator.jsx
 Photoshop CC 14.2下Generator图层命名脚本. 将图层自动命名为`x_mdpi.png, 150% x_hdpi.png, 200% x_xhdpi.png`. 然后使用File - Generate自动生成图片.
