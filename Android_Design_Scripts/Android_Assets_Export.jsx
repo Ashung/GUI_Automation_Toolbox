@@ -128,9 +128,9 @@
     }
     
     browser.onClick = function() {
-        var f = Folder(path.text).selectDlg('Select the "res" folder:');
+        var f = Folder(path.text).selectDlg('Select the folder you wannt to export:');
         if(f != null)
-            path.text = f.fullName + '/res';
+            path.text = f.fullName;
     }
 
     // Initialize File Name

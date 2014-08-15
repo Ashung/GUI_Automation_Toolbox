@@ -32,13 +32,13 @@
     var assetsPath = root + '/' + psdNameWithoutExt + '-assets';
     if(!Folder(assetsPath).exists) {
         $.writeln('NO ASSETS FOLDER!');
-        return;
+        //return;
     }
         
     var assets = Folder(assetsPath).getFiles();
     if(assets == null || assets.length == 0) {
         $.writeln('ASSETS FOLDER HAVE NO FILES!');
-        return;
+        //return;
     }
     
     // Dialog ui.
@@ -52,6 +52,21 @@
             label: StaticText { text: 'Replace Files:' },\
             replaceType: DropDownList {}\
         },\
+        package: Group {\
+            orientation: 'column',\
+            alignChildren: 'left', \
+            label: StaticText { text: 'Package Files to:' },\
+            pathFormItem: Group {\
+                orientation: 'row',\
+                pathText: EditText {\
+                    size: [210, 25] \
+                },\
+                pathBrowser: Button { \
+                    text: 'Browser...', \
+                    size: [80, 25] \
+                }\
+            }\
+        },\
         assets: Group {\
             orientation: 'column',\
             alignChildren: 'left', \
@@ -61,7 +76,6 @@
                 properties: { multiselect: true } \
             }\
         },\
-        separator2: Panel { preferredSize: [300, 0] },\
         buttons: Group {\
             orientation: 'row',\
             cancelBtn: Button {\

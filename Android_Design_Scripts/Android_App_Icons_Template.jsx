@@ -1,107 +1,120 @@
-// AndroidLuncherIconTemplate.jsx
-// (c) 2013 Ashung Hung. 
+/**
+* @@@BUILDINFO@@@ Android_App_Icons_Template.jsx !Version! Fri Aug 15 2014 10:35:55 GMT+0800
+*/
+/*
+ * Android App Icon Template
+ * 
+ * Automation create Android app icon template for all dpis.
+ *
+ * Author: Ashung Hung
+ *
+ */
 
-#target photoshop
+(function(){
+    'use strict'
 
-cTID=function(s){return app.charIDToTypeID(s);};
-sTID=function(s){return app.stringIDToTypeID(s);};
+    androidAppIcon();
 
-function androindLuncherIcon() {
-    newWhiteDoc('Android Luncher Icons', 800, 600);
-    
-    /*
-    newGroup('Android Luncher Icon LDPI (36px)');
-    rect(592, 376, 36, 36, 'eeeeee', 'background');
-    selcetTopLayer();
-    */
-    
-    newGroup('Luncher Icon MDPI (48px)');
-    rect(592, 472, 48, 48, 'eeeeee', 'background');
-    selcetTopLayer();    
-    
-    newGroup('Luncher Icon HDPI (72px)');
-    rect(592, 360, 72, 72, 'eeeeee', 'background');
-    selcetTopLayer();
-    
-    newGroup('Luncher Icon XHDPI (96px)');
-    rect(592, 224, 96, 96, 'eeeeee', 'background');
-    selcetTopLayer();
-    
-    newGroup('Luncher Icon XXHDPI (144px)');
-    rect(592, 40, 144, 144, 'eeeeee', 'background');
-    selcetTopLayer();
-    
-    newGroup('Google Play Icon (512px)');
-    rect(40, 40, 512, 512, 'eeeeee', 'background');
-    selcetTopLayer();
-}
+    function androidAppIcon() {
+        newWhiteDoc('Android Launcher Icons', 800, 700);
+        
+        /*
+        newGroup('LDPI (36px)');
+        rect(592, 376, 36, 36, 'eeeeee', '#');
+        selcetTopLayer();
+        */
+        
+        newGroup('MDPI (48px)');
+        rect(572, 624, 48, 48, 'eeeeee', '#');
+        selcetTopLayer();    
+        
+        newGroup('HDPI (72px)');
+        rect(572, 532, 72, 72, 'eeeeee', '#');
+        selcetTopLayer();
+        
+        newGroup('XHDPI (96px)');
+        rect(572, 416, 96, 96, 'eeeeee', '#');
+        selcetTopLayer();
+        
+        newGroup('XXHDPI (144px)');
+        rect(572, 252, 144, 144, 'eeeeee', '#');
+        selcetTopLayer();
+        
+        newGroup('XXXHDPI (192px)');
+        rect(572, 40, 192, 192, 'eeeeee', '#');
+        selcetTopLayer();
+        
+        newGroup('Google Play Icon (512px)');
+        rect(40, 40, 512, 512, 'eeeeee', '#');
+        selcetTopLayer();
+    }
 
-function newWhiteDoc(docName, docWidth, docHeight) {
-    preferences.rulerUnits = Units.PIXELS;
-    documents.add(docWidth, docHeight, 72, docName, NewDocumentMode.RGB, DocumentFill.WHITE);
-}
+    function newWhiteDoc(docName, docWidth, docHeight) {
+        preferences.rulerUnits = Units.PIXELS;
+        documents.add(docWidth, docHeight, 72, docName, NewDocumentMode.RGB, DocumentFill.WHITE);
+    }
 
-function newGroup(groupName) {
-    var newGroup = activeDocument.layerSets.add();
-        newGroup.name = groupName;
-}
+    function newGroup(groupName) {
+        var newGroup = activeDocument.layerSets.add();
+            newGroup.name = groupName;
+    }
 
-function rect(posX, posY, width, height, fillColor, layerName) {
-    rectPath(posX, posY, width, height);
-    fillPath(fillColor, layerName);
-    deselectPath();
-}
+    function rect(posX, posY, width, height, fillColor, layerName) {
+        rectPath(posX, posY, width, height);
+        fillPath(fillColor, layerName);
+        deselectPath();
+    }
 
-function rectPath(posX, posY, width, height) {
-    var top = posY;
-    var left = posX;
-    var bottom = height + posY;
-    var right = width + posX;
-    var desc1 = new ActionDescriptor();
-    var ref1 = new ActionReference();
-        ref1.putProperty(cTID('Path'), cTID('WrPt'));
-        desc1.putReference(cTID('null'), ref1);
-    var desc2 = new ActionDescriptor();
-        desc2.putUnitDouble(cTID('Top '), cTID('#Pxl'), top);
-        desc2.putUnitDouble(cTID('Left'), cTID('#Pxl'), left);
-        desc2.putUnitDouble(cTID('Btom'), cTID('#Pxl'), bottom);
-        desc2.putUnitDouble(cTID('Rght'), cTID('#Pxl'), right);
-        desc1.putObject(cTID('T   '), cTID('Rctn'), desc2);
-    executeAction(cTID('setd'), desc1, DialogModes.NO);
-}
+    function rectPath(posX, posY, width, height) {
+        var top = posY;
+        var left = posX;
+        var bottom = height + posY;
+        var right = width + posX;
+        var desc1 = new ActionDescriptor();
+        var ref1 = new ActionReference();
+            ref1.putProperty(charIDToTypeID('Path'), charIDToTypeID('WrPt'));
+            desc1.putReference(charIDToTypeID('null'), ref1);
+        var desc2 = new ActionDescriptor();
+            desc2.putUnitDouble(charIDToTypeID('Top '), charIDToTypeID('#Pxl'), top);
+            desc2.putUnitDouble(charIDToTypeID('Left'), charIDToTypeID('#Pxl'), left);
+            desc2.putUnitDouble(charIDToTypeID('Btom'), charIDToTypeID('#Pxl'), bottom);
+            desc2.putUnitDouble(charIDToTypeID('Rght'), charIDToTypeID('#Pxl'), right);
+            desc1.putObject(charIDToTypeID('T   '), charIDToTypeID('Rctn'), desc2);
+        executeAction(charIDToTypeID('setd'), desc1, DialogModes.NO);
+    }
 
-function fillPath(fillColor, layerName) {
-    var color = new SolidColor();
-        color.rgb.red = parseInt(fillColor.substr(0,2), 16);
-        color.rgb.green = parseInt(fillColor.substr(2,2), 16);
-        color.rgb.blue = parseInt(fillColor.substr(4,2), 16);
-    var desc1 = new ActionDescriptor();
-    var ref1 = new ActionReference();
-        ref1.putClass(sTID("contentLayer"));
-        desc1.putReference(cTID('null'), ref1);
-    var desc2 = new ActionDescriptor();
-        desc2.putString(cTID('Nm  '), layerName);
-    var desc3 = new ActionDescriptor();
-    var desc4 = new ActionDescriptor();
-        desc4.putDouble(cTID('Rd  '), color.rgb.red);
-        desc4.putDouble(cTID('Grn '), color.rgb.green);
-        desc4.putDouble(cTID('Bl  '), color.rgb.blue);
-        desc3.putObject(cTID('Clr '), sTID("RGBColor"), desc4);
-        desc2.putObject(cTID('Type'), sTID("solidColorLayer"), desc3);
-        desc1.putObject(cTID('Usng'), sTID("contentLayer"), desc2);
-    executeAction(cTID('Mk  '), desc1, DialogModes.NO);    
-}
+    function fillPath(fillColor, layerName) {
+        var color = new SolidColor();
+            color.rgb.red = parseInt(fillColor.substr(0,2), 16);
+            color.rgb.green = parseInt(fillColor.substr(2,2), 16);
+            color.rgb.blue = parseInt(fillColor.substr(4,2), 16);
+        var desc1 = new ActionDescriptor();
+        var ref1 = new ActionReference();
+            ref1.putClass(stringIDToTypeID("contentLayer"));
+            desc1.putReference(charIDToTypeID('null'), ref1);
+        var desc2 = new ActionDescriptor();
+            desc2.putString(charIDToTypeID('Nm  '), layerName);
+        var desc3 = new ActionDescriptor();
+        var desc4 = new ActionDescriptor();
+            desc4.putDouble(charIDToTypeID('Rd  '), color.rgb.red);
+            desc4.putDouble(charIDToTypeID('Grn '), color.rgb.green);
+            desc4.putDouble(charIDToTypeID('Bl  '), color.rgb.blue);
+            desc3.putObject(charIDToTypeID('Clr '), stringIDToTypeID("RGBColor"), desc4);
+            desc2.putObject(charIDToTypeID('Type'), stringIDToTypeID("solidColorLayer"), desc3);
+            desc1.putObject(charIDToTypeID('Usng'), stringIDToTypeID("contentLayer"), desc2);
+        executeAction(charIDToTypeID('Mk  '), desc1, DialogModes.NO);    
+    }
 
-function deselectPath() {
-    var desc1 = new ActionDescriptor();
-    var ref1 = new ActionReference();
-    ref1.putClass(cTID('Path'));
-    desc1.putReference(cTID('null'), ref1);
-    executeAction(cTID('Dslc'), desc1, DialogModes.NO);    
-}
+    function deselectPath() {
+        var desc1 = new ActionDescriptor();
+        var ref1 = new ActionReference();
+        ref1.putClass(charIDToTypeID('Path'));
+        desc1.putReference(charIDToTypeID('null'), ref1);
+        executeAction(charIDToTypeID('Dslc'), desc1, DialogModes.NO);    
+    }
 
-function selcetTopLayer() {
-    activeDocument.activeLayer = activeDocument.layers[0];
-}
+    function selcetTopLayer() {
+        activeDocument.activeLayer = activeDocument.layers[0];
+    }
 
-androindLuncherIcon();
+})();

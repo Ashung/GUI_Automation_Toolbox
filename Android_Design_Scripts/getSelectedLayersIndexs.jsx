@@ -38,21 +38,25 @@ function getSelectedLayersIndexs() {
 var selectedLayers = getSelectedLayersIndexs();
 
 for(var i = 0; i < selectedLayers.length; i++) {
+    
+    
 
+        selectLayerByIndex(selectedLayers[i]);
+    
 
-selectLayerByIndex(selectedLayers[i])
-
-function selectLayerByIndex(index) {
-    var desc1 = new ActionDescriptor();
-    var ref1 = new ActionReference();
-        ref1.putIndex(charIDToTypeID("Lyr "), index);
-        desc1.putReference(charIDToTypeID("null"), ref1);
-        executeAction(charIDToTypeID("slct"), desc1, DialogModes.NO);
-}
+    function selectLayerByIndex(index) {
+        var desc1 = new ActionDescriptor();
+        var ref1 = new ActionReference();
+            ref1.putIndex(charIDToTypeID("Lyr "), index);
+            desc1.putReference(charIDToTypeID("null"), ref1);
+            executeAction(charIDToTypeID("slct"), desc1, DialogModes.NO);
+    }
 
     $.writeln(activeDocument.activeLayer.name)
     
-    activeDocument.activeLayer.name = 'iconBg';
+    if(activeDocument.activeLayer.typename == 'LayerSet') {
+        activeDocument.activeLayer.name = 'xxxx';
+    }
 }
 
 /*
