@@ -10,6 +10,8 @@
  *
  */
 
+#target photoshop;
+
 (function(){
     'use strict'
 
@@ -36,7 +38,7 @@
         exportPath: Group {\
             orientation: 'column',\
             alignChildren: 'left', \
-            labelFiles: StaticText { text: 'Export assets to:' },\
+            labelFiles: StaticText { text: 'Export assets to (/d/folder1/folder2):' },\
             pathFormItem: Group {\
                 orientation: 'row',\
                 pathText: EditText {\
@@ -160,6 +162,8 @@
     
     // Button event.
     AAE.buttons.runBtn.onClick = function() {
+        
+        this.enabled = false;
         
         // Create Folders
         if(!Folder(path.text).exists)
