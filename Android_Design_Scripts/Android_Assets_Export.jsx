@@ -1,12 +1,25 @@
-/**
-* @@@BUILDINFO@@@ Android_Assets_Export.jsx !Version! Tue Jul 29 2014 11:27:21 GMT+0800
-*/
+/*
+ * Copyright (c) 2014 Ashung Hung
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 /*
  * Android Assets Export
  * 
  * Automation resize psd file and exprot PNG for different dpi.
  *
- * Author: Ashung Hung
+ * Version: 20140729
+ * Author: Ashung Hung (Ashung.hung@gmail.com)
  *
  */
 
@@ -136,7 +149,7 @@
     }
 
     // Initialize File Name
-    fileName.text = activeDocument.activeLayer.name;
+    fileName.text = activeDocument.activeLayer.name.replace(/.(9.png|png|jpg|gif)$/i, '');
     // For images files
     if(/.(9.png|png|jpg|gif)$/i.test(activeDocument.name)) {
         fileName.text = activeDocument.name.replace(/.(9.png|png|jpg|gif)$/i, '');

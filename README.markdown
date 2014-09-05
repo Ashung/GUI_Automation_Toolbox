@@ -25,8 +25,19 @@ Photoshop script for smart designer.
 
 ---
 
+####Android_Export_Layers_to_PNG.jsx
+用于将图层/图层组导出成各种DPI的PNG图片.
+
+1. 选择"导出所有图层/图层组"或者"导出选中图层组的子图层/图层组"
+2. 选择导出图片的文件名类型. 部分文件名类型需要填写附加文字.
+3. 选择保存目录, 默认保存在桌面的res目录下.
+4. 选择PSD文档相应的DPI.
+5. 勾选需要导出的DPI资源.
+
+---
+
 ####Android_Layer_Namer_For_Adobe_Generator.jsx
-Photoshop CC 14.2下Generator图层命名脚本. 将图层自动命名为`x_mdpi.png, 150% x_hdpi.png, 200% x_xhdpi.png`. 然后使用File - Generate自动生成图片.
+Photoshop CC 14.1+下Generator图层命名脚本. 将图层自动命名为`x_mdpi.png, 150% x_hdpi.png, 200% x_xhdpi.png`. 然后使用File - Generate自动生成图片.
 
 **注意**: Photoshop CC 14.2下的Generator不支持类似33.3%的缩放比例, 此脚本只支持从MDPI或XHDPI的PSD生成资源. 生成资源后使用 Android_Assets_Package_For_Adobe_Generator.jsx 将资源图片自动分类到MDPI/HDPI等目录下.
 

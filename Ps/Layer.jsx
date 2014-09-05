@@ -48,3 +48,23 @@ _Ps._Layer._Show_Layers = function() {
     desc1.putList(idnull, list1);
     executeAction(idShw, desc1, DialogModes.NO);
 }
+
+
+
+_Ps._Layer._Layer_Content_Options = function() {
+    
+    
+    
+    var desc1 = new ActionDescriptor();
+    var ref1 = new ActionReference();
+    ref1.putEnumerated(stringIDToTypeID("contentLayer"), charIDToTypeID('Ordn'), charIDToTypeID('Trgt'));
+    desc1.putReference(charIDToTypeID('null'), ref1);
+    var desc2 = new ActionDescriptor();
+    var desc3 = new ActionDescriptor();
+    desc3.putDouble(charIDToTypeID('Rd  '), 51.0031127929688);
+    desc3.putDouble(charIDToTypeID('Grn '), 51.0031127929688);
+    desc3.putDouble(charIDToTypeID('Bl  '), 51.0031127929688);
+    desc2.putObject(charIDToTypeID('Clr '), stringIDToTypeID("RGBColor"), desc3);
+    desc1.putObject(charIDToTypeID('T   '), stringIDToTypeID("solidColorLayer"), desc2);
+    executeAction(charIDToTypeID('setd'), desc1, DialogModes.NO);
+}

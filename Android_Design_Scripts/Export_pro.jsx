@@ -1,5 +1,5 @@
 
- var start = new Date().getTime();   
+var start = new Date().getTime();   
     
  //doc = activeDocument;   
     
@@ -78,6 +78,11 @@ traverseLayersAMFlat(activeDocument, function(){
         
         // 
         traverseLayersAMFlat(activeDocument, function() {
+            
+            // Change Fill Color
+            //changeSolidColor(0, 0, 0);
+            
+            
             // Hide shadow layer
             if(activeDocument.activeLayer.name == 'shadow') {
                 activeDocument.activeLayer.visible = false;
@@ -291,6 +296,24 @@ function exportAssets(dpiKeyword) {
     try {
         activeDocument.activeHistoryState = activeDocument.historyStates.getByName ('__');
     } catch(e) {}
+}
+
+
+function changeSolidColor(r, g, b) {
+    if(activeDocument.activeLayer.typename == 'ArtLayer' && activeDocument.activeLayer.kind == LayerKind.SOLIDFILL) {
+        var desc1 = new ActionDescriptor();
+        var ref1 = new ActionReference();
+        ref1.putEnumerated(stringIDToTypeID("contentLayer"), charIDToTypeID('Ordn'), charIDToTypeID('Trgt'));
+        desc1.putReference(charIDToTypeID('null'), ref1);
+        var desc2 = new ActionDescriptor();
+        var desc3 = new ActionDescriptor();
+        desc3.putDouble(charIDToTypeID('Rd  '), r);
+        desc3.putDouble(charIDToTypeID('Grn '), g);
+        desc3.putDouble(charIDToTypeID('Bl  '), b);
+        desc2.putObject(charIDToTypeID('Clr '), stringIDToTypeID("RGBColor"), desc3);
+        desc1.putObject(charIDToTypeID('T   '), stringIDToTypeID("solidColorLayer"), desc2);
+        executeAction(charIDToTypeID('setd'), desc1, DialogModes.NO);
+    }
 }
 
 var stop = new Date().getTime();
