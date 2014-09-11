@@ -178,45 +178,23 @@
         
         this.enabled = false;
         
-        // Create Folders
-        if(!Folder(path.text).exists)
-            Folder(path.text).create();
-        
         if(nodpi.value) {
-            if(!Folder(path.text + '/drawable-nodpi').exists) {
-                Folder(path.text + '/drawable-nodpi').create();
-            }
             exportAssets('nodpi');
         }
 
         if(mdpi.value) {
-            if(!Folder(path.text + '/drawable-mdpi').exists) {
-                Folder(path.text + '/drawable-mdpi').create();
-            }
             exportAssets('mdpi');
         }
         if(hdpi.value) {
-            if(!Folder(path.text + '/drawable-hdpi').exists) {
-                Folder(path.text + '/drawable-hdpi').create();
-            }
             exportAssets('hdpi');
         }
         if(xhdpi.value) {
-            if(!Folder(path.text + '/drawable-xhdpi').exists) {
-                Folder(path.text + '/drawable-xhdpi').create();
-            }
             exportAssets('xhdpi');
         }
         if(xxhdpi.value) {
-            if(!Folder(path.text + '/drawable-xxhdpi').exists) {
-                Folder(path.text + '/drawable-xxhdpi').create();
-            }
             exportAssets('xxhdpi');
         }
         if(xxxhdpi.value) {
-            if(!Folder(path.text + '/drawable-xxxhdpi').exists) {
-                Folder(path.text + '/drawable-xxxhdpi').create();
-            }
             exportAssets('xxxhdpi');
         }
     
@@ -275,7 +253,16 @@
     }
 
     function exportPNG(targetFile) {
-        $.writeln('Export PNG to:' +  targetFile);
+        // Create Folder
+        if(!Folder(targetFile.parent).exists) {
+            Folder(targetFile.parent).create();
+        }
+    
+        // File readonly
+        if(targetFile.exists && targetFile.readonly == true) {
+            targetFile.readonly = false;
+        }
+        
         // PNG-24 Settings
         var png24Options = new ExportOptionsSaveForWeb();
             png24Options.format = SaveDocumentType.PNG;
@@ -283,7 +270,8 @@
             png24Options.transparency = true;
             png24Options.interlaced = false;
             png24Options.includeProfile = false;
-        activeDocument.exportDocument(targetFile, ExportType.SAVEFORWEB, png24Options);  
+        activeDocument.exportDocument(targetFile, ExportType.SAVEFORWEB, png24Options);
+        $.writeln('Export PNG to: ' +  targetFile);
     }
 
     function exportAssets(dpiKeyword) {

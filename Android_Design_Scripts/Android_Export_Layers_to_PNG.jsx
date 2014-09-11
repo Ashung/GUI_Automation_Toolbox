@@ -147,7 +147,11 @@
     var outputBrowser = AEL.outputFolder.outputForm.outputBrowser;
     
     try {
-        outputFolder.text = activeDocument.path + '/res';
+        if(/\/drawable-(nodpi|ldpi|mdpi|hdpi|xhdpi|xxhdpi|xxxhdpi)/i.test(String(activeDocument.path))) {
+            outputFolder.text = String(activeDocument.path).replace(/\/drawable-(nodpi|ldpi|mdpi|hdpi|xhdpi|xxhdpi|xxxhdpi)/i, '');
+        } else {
+            outputFolder.text = activeDocument.path + '/res';
+        }
     } catch(e) {
         outputFolder.text = Folder.desktop.fullName + '/res';
     }

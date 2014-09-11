@@ -47,8 +47,16 @@ function traverseLayersAMFlat(doc, ftn) {
 
     
 var iconName;   
-  
-var exportDir = activeDocument.path + '/res';
+ 
+try {
+    var exportDir = activeDocument.path + activeDocument.name + '-assets/res';
+} catch(){
+    var exportDir = Folder.desktop.fullName  + activeDocument.name + '-assets/res';
+}
+
+
+
+
 var docDPI = 'xhdpi';
 var nodpi = false;
 var mdpi = hdpi = xhdpi = xxhdpi = xxxhdpi = true;    
