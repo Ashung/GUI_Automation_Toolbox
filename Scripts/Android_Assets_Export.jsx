@@ -23,8 +23,6 @@
  *
  */
 
-#target photoshop;
-
 (function(){
     'use strict'
 
@@ -227,12 +225,12 @@
     }
 
     function normalResize(scale) {
-        $.writeln('Scale: x' +  scale);
+        $.writeln('x' +  scale);
         resize(scale);
     }
     
     function ninePatchResize(scale) {
-        $.writeln('Scale: x' +  scale);
+        $.writeln('x' +  scale);
         activeDocument.resizeCanvas(activeDocument.width.as('px') - 2, activeDocument.height.as('px') - 2, AnchorPosition.MIDDLECENTER);
         resize(scale, 'Nrst');
         activeDocument.resizeCanvas(activeDocument.width.as('px') + 2, activeDocument.height.as('px') + 2, AnchorPosition.MIDDLECENTER);
@@ -271,7 +269,8 @@
             png24Options.interlaced = false;
             png24Options.includeProfile = false;
         activeDocument.exportDocument(targetFile, ExportType.SAVEFORWEB, png24Options);
-        $.writeln('Export PNG to: ' +  targetFile);
+        
+        $.writeln('--> ' +  targetFile.fsName);
     }
 
     function exportAssets(dpiKeyword) {
