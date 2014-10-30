@@ -148,6 +148,10 @@
 
     // Initialize File Name
     fileName.text = activeDocument.activeLayer.name.replace(/.(9.png|png|jpg|gif)$/i, '');
+    
+    // Java variable name rule.
+    fileName.text = fileName.text.replace(/(\.|\ |\+|\-)/g, '_').replace(/([0-9]|_)*/, '').toLowerCase();
+    
     // For images files
     if(/.(9.png|png|jpg|gif)$/i.test(activeDocument.name)) {
         fileName.text = activeDocument.name.replace(/.(9.png|png|jpg|gif)$/i, '');

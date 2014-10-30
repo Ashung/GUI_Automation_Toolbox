@@ -56,7 +56,7 @@
             labelImageName: StaticText { text: 'Image Name:' },\
             namesDPIList: DropDownList {\
                 size: [300, 25] \
-            }\
+            } \
         }, \
         imageNamePrefix: Group { \
             orientation: 'column',\
@@ -128,9 +128,9 @@
         imageNames.add('item', 'layer_name.png');
         imageNames.add('item', '[Prefix]_layer_name.png');
         imageNames.add('item', 'layer_name_[Prefix].png');
-        imageNames.add('item', '[Prefix]_[1,2,3...].png');
-        imageNames.add('item', '[Prefix]_[01,02,03...].png');
-        imageNames.add('item', '[Prefix]_[001,002,003...].png');
+        imageNames.add('item', '[Prefix]_[1,2,3...].png (Name layer from top to bottom.)');
+        imageNames.add('item', '[Prefix]_[01,02,03...].png (Name layer from top to bottom.)');
+        imageNames.add('item', '[Prefix]_[001,002,003...].png (Name layer from top to bottom.)');
 
         imageNames.selection = imageNames.items[0];
         
@@ -298,8 +298,14 @@
      * @param String path
      */
     function exportPng(path) {
+        // Create Folder
         if(!File(path).parent.exists) {
             File(path).parent.create();
+        }
+    
+        // File readonly
+        if(File(path).exists && File(path).readonly == true) {
+            File(path).readonly = false;
         }
         var png24Options = new ExportOptionsSaveForWeb();
             png24Options.format = SaveDocumentType.PNG;
