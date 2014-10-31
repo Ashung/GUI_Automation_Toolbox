@@ -27,7 +27,7 @@
     'use strict'
 
     if(documents.length == 0) {
-        $.writeln('NO DOCUMENTS!');
+        // $.writeln('NO DOCUMENTS!');
         return;
     }
         
@@ -200,7 +200,7 @@
             exportAssets('xxxhdpi');
         }
     
-        $.writeln('Completed!');
+        //$.writeln('Completed!');
         
         AAE.close();
     }
@@ -229,12 +229,12 @@
     }
 
     function normalResize(scale) {
-        $.writeln('x' +  scale);
+        //$.writeln('x' +  scale);
         resize(scale);
     }
     
     function ninePatchResize(scale) {
-        $.writeln('x' +  scale);
+        //$.writeln('x' +  scale);
         activeDocument.resizeCanvas(activeDocument.width.as('px') - 2, activeDocument.height.as('px') - 2, AnchorPosition.MIDDLECENTER);
         resize(scale, 'Nrst');
         activeDocument.resizeCanvas(activeDocument.width.as('px') + 2, activeDocument.height.as('px') + 2, AnchorPosition.MIDDLECENTER);
@@ -274,7 +274,7 @@
             png24Options.includeProfile = false;
         activeDocument.exportDocument(targetFile, ExportType.SAVEFORWEB, png24Options);
         
-        $.writeln('--> ' +  targetFile.fsName);
+        //$.writeln('--> ' +  targetFile.fsName);
     }
 
     function exportAssets(dpiKeyword) {
