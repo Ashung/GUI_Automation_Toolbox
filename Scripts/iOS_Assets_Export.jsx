@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 /*
- * Android Assets Export
+ * iOS Assets Export
  * 
- * Automation resize psd file and exprot PNG for different dpi.
+ * Automation resize psd file and exprot PNG/PDF for different size.
  *
- * Version: 20140729
+ * Create: 20141118
  * LastModify: 20141118
  * Author: Ashung Hung (Ashung.hung@gmail.com)
  *
@@ -27,34 +27,28 @@
 (function(){
     'use strict'
 
-    if(documents.length == 0) {
-        // $.writeln('NO DOCUMENTS!');
-        return;
-    }
-        
-    // Default dpi config.
-    var psdDPI = 'mdpi';
+    if(documents.length == 0) { return; }  
 
     var ui = 
     "dialog {\
-        text: 'Android Asset Export',\
+        text: 'iOS Asset Export',\
         alignChildren: 'fill',\
-        docDPI: Group {\
+        docSize: Group {\
             orientation: 'column',\
             alignChildren: 'left', \
-            labelFiles: StaticText { text: 'Your document DPI (mdpi/xhdpi recommend):' },\
-            docDPIList: DropDownList {\
-                size: [300, 25] \
+            labelFiles: StaticText { text: 'Document size:' },\
+            docSizeList: DropDownList {\
+                size: [400, 25] \
             }\
         },\
         exportPath: Group {\
             orientation: 'column',\
             alignChildren: 'left', \
-            labelFiles: StaticText { text: 'Export assets to (/d/folder1/folder2):' },\
+            labelFiles: StaticText { text: 'Export assets to:' },\
             pathFormItem: Group {\
                 orientation: 'row',\
                 pathText: EditText {\
-                    size: [210, 25] \
+                    size: [310, 25] \
                 },\
                 pathBrowser: Button { \
                     text: 'Browser...', \
@@ -62,42 +56,44 @@
                 }\
             }\
         },\
-        exportFileName: Group {\
-            orientation: 'column',\
-            alignChildren: 'left', \
-            labelFiles: StaticText { text: 'File name (Not include \".png/.9.png\"):' },\
-            fileNameText: EditText {\
-                size: [300, 25] \
+        assetSettings: Group {\
+            orientation: 'row',\
+            assetName: Group {\
+                orientation: 'column',\
+                alignChildren: 'left', \
+                labelFiles: StaticText { text: 'Asset name:' },\
+                fileNameText: EditText {\
+                    size: [240, 25] \
+                }\
+            },\
+            deviceSuffix: Group {\
+                orientation: 'column',\
+                alignChildren: 'left', \
+                labelFiles: StaticText { text: 'Device Suffix:' },\
+                suffixList: DropDownList {\
+                    size: [80, 25] \
+                }\
             }\
-        },\
-        ninePatch: Group {\
-            orientation: 'column',\
-            alignChildren: 'left', \
-            labelNinePatch: StaticText { text: 'Nine-Patch:'},\
-            checkboxNinePatch: Checkbox {\
-                value: false,\
-                text: 'Yes.'\
+            assetType: Group {\
+                orientation: 'column',\
+                alignChildren: 'left', \
+                labelFiles: StaticText { text: 'Asset type:' },\
+                typeList: DropDownList {\
+                    size: [60, 25] \
+                }\
             }\
-        },\
-        exportDPI: Group {\
+        }, \
+        exportSize: Group {\
             orientation: 'column',\
             alignChildren: 'left', \
             labelExport: StaticText { text: 'Export:'},\
             dpis: Group {\
                 orientation: 'row' \
             }\
-            nodpi: Checkbox {\
-                value: false,\
-                text: 'nodpi'\
-            }\
         },\
         separator2: Panel { preferredSize: [300, 0] },\
         buttons: Group {\
             orientation: 'row',\
-            cancelBtn: Button {\
-                alignment: ['right', 'center'], \
-                text: 'Cancel'\
-            },\
             runBtn: Button {\
                 alignment: ['right', 'center'], \
                 text: 'OK'\
@@ -105,13 +101,79 @@
         }\
     }";
    
-    var AAE = new Window(ui);
+    var IAE = new Window(ui);
     
-    var docDPIList = AAE.docDPI.docDPIList;
+    var docSizes = [
+        { 'ratio': 1, 'suffix': '',    'shortText': 'Normal', 'text': 'Normal (320x480)' },
+        { 'ratio': 2, 'suffix': '@2x', 'shortText': '@2x',    'text': '@2x (640x960/640x1136)' },
+        { 'ratio': 3, 'suffix': '@3x', 'shortText': '@3x',    'text': '@3x ()' },
+    ];
+    
+    // Initialize docSize DropDownList
+    var currentDocRatio = 1;
+    var docSizeList = IAE.docSize.docSizeList;
+    for(var i = 0; i < docSizes.length; i ++) {
+        docSizeList.add('item', docSizes[i].text);
+        if(docSizes[i].ratio == currentDocRatio) {
+            docSizeList.selection = docSizeList.items[i];
+        }
+    }
+    docSizeList.onChange = function() {
+        currentDocRatio = docSizes[docSizeList.selection.index].ratio;
+    }
+
+    // Devices Suffix
+    var currentDeviceSuffix = '';
+    var deviceSuffix = ['', '~ipad', '~iphone', '~mac'];
+    var suffixList = IAE.assetSettings.deviceSuffix.suffixList;
+    for(var i = 0; i < deviceSuffix.length; i ++) {
+        suffixList.add('item', deviceSuffix[i]);
+        if(deviceSuffix[i] == currentDeviceSuffix) {
+            suffixList.selection = suffixList.items[i];
+        }
+    }
+    suffixList.onChange = function() {
+        currentDeviceSuffix = suffixList[suffixList.selection.index];
+    }
+    
+    // Asset Type
+    var currentAssetType = '.png';
+    var assetTypes = ['.png', '.pdf'];
+    var typeList = IAE.assetSettings.assetType.typeList;
+    for(var i = 0; i < assetTypes.length; i ++) {
+        typeList.add('item', assetTypes[i]);
+        if(assetTypes[i] == currentAssetType) {
+            typeList.selection = typeList.items[i];
+        }
+    }
+    typeList.onChange = function() {
+        currentAssetType = typeList[typeList.selection.index];
+    }
+
+
+
+
+
+// Default dpi config.
+    
+
+// icon~ipad@2x.png
+
+
+
+
+    IAE.show();
+    
+    
+    
+    
+    
+ /*   
+    var docDPIList = AAE.docSize.docDPIList;
     var docDPI;
     var path = AAE.exportPath.pathFormItem.pathText;
     var browser = AAE.exportPath.pathFormItem.pathBrowser;
-    var fileName = AAE.exportFileName.fileNameText;
+    var fileName = AAE.assetName.fileNameText;
     var dpis = ['mdpi', 'hdpi', 'xhdpi', 'xxhdpi', 'xxxhdpi'];
     
     var firstTimeRun = true;
@@ -120,7 +182,7 @@
     
     // Initialize docDPI DropDownList
     for(var i = 0; i < dpis.length; i ++) {
-        docDPIList.add('item', dpis[i]);
+        docSizeList.add('item', dpis[i]);
         if(dpis[i] == psdDPI) {
             docDPIList.selection = docDPIList.items[i];
             docDPI = docDPIList.selection.text;
@@ -151,8 +213,8 @@
     fileName.text = activeDocument.activeLayer.name.replace(/.(9.png|png|jpg|gif)$/i, '');
     
     // Java variable name rule.
-    fileName.text = fileName.text.replace(/(\.|\ |\+|\-)/g, '_').replace(/([0-9]|_)*/, '').toLowerCase();
-    
+    fileName.text = fileName.text.replace(/(\.|\ |\+|\-)/g, '_').replace(/([0-9]|_), '').toLowerCase();
+
     // For images files
     var isImageFile = false;
     if(/.(9.png|png|jpg|gif)$/i.test(activeDocument.name)) {
@@ -160,15 +222,7 @@
         isImageFile = true;
     }
 
-    // NinePatch
-    var ninePatch = AAE.ninePatch.checkboxNinePatch;
-    if(/.(9.png)$/i.test(activeDocument.activeLayer.name)) {
-        ninePatch.value = true;
-    }
-    if(isImageFile) {
-        ninePatch.value = false;
-        ninePatch.enabled = false;
-    }
+
     
     // Initialize Export DPI
     var mdpi, hdpi, xhdpi, xxhdpi, xxxhdpi;
@@ -305,5 +359,5 @@
         
         //$.writeln('--> ' +  targetFile.fsName);
     }
-
+*/
 })();

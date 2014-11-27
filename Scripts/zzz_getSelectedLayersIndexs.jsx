@@ -55,7 +55,7 @@ for(var i = 0; i < selectedLayers.length; i++) {
     $.writeln(activeDocument.activeLayer.name)
     
     if(activeDocument.activeLayer.typename == 'LayerSet') {
-        activeDocument.activeLayer.name = 'xxxx';
+        activeDocument.activeLayer.name = activeDocument.activeLayer.name + '.png';
     }
 }
 

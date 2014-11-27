@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>TEST</title>
+<style>
+body{margin:0;padding:5px;font-size:12px;}
+#color{margin:0 0 10px;width:300px;height:100px;font-size:20px;text-align:center;background:hsl(0,0%,0%);-webkit-user-select:none;cursor:default;}
+#color-text{}
+
+
+
+
+#slide-h{width:150px;height:5px;margin-left:16px;}
+input[type="range"]{width:150px;}
+
+.label{width:16px;float:left;}
+
+</style>
+</head>
+<body>
+
+<div id="color">
+	<span id="color-text">HSL(<span id="color-text-h">0</span>, <span id="color-text-s">0</span>, <span id="color-text-l">0</span>)</span>
+</div>
+
+
+<div>
+	<div id="slide-h"></div>
+	<span class="label">H</span>
+	<input type="range" id="color-h" name="h" min="0" max="360" step="1" value="0">
+	<span id="color-h-text">0</span>&deg;
+
+	<a href="javascript:minusValue('color-h', 10, 360);">-10</a>
+	<a href="javascript:minusValue('color-h', 5, 360);">-5</a>
+	
+	<a href="javascript:addValue('color-h', 5, 360);">+5</a>
+	<a href="javascript:addValue('color-h', 10, 360);">+10</a>
+</div>
+<div>
+	<span class="label">S</span>
+	<input type="range" id="color-s" name="s" min="0" max="100" step="1" value="100">
+	<span id="color-s-text">0</span>%
+
+	<a href="javascript:minusValue('color-s', 10, 100);">-10</a>
+	<a href="javascript:minusValue('color-s', 5, 100);">-5</a>
+	
+	<a href="javascript:addValue('color-s', 5, 100);">+5</a>
+	<a href="javascript:addValue('color-s', 10, 100);">+10</a>
+</div>
+<div>
+	<span class="label">L</span>
+	<input type="range" id="color-l" name="l" min="0" max="100" step="1" value="50">
+	<span id="color-l-text">0</span>%
+
+	<a href="javascript:minusValue('color-l', 10, 100);">-10</a>
+	<a href="javascript:minusValue('color-l', 5, 100);">-5</a>
+	
+	<a href="javascript:addValue('color-l', 5, 100);">+5</a>
+	<a href="javascript:addValue('color-l', 10, 100);">+10</a>
+</div>
+<div>
+	<span class="label">#</span>
+	<input type="text" id="color-hex" value="000000" maxlength="6">
+</div>
+<div>
+	<span class="label">HSL</span>
+	<input type="text" id="color-hsl" value="hsl(0,0,0)">
+</div>
+
+<script>
+var _h = document.getElementById('color-h');
+var _s = document.getElementById('color-s');
+var _l = document.getElementById('color-l');
+var _hh = document.getElementById('color-h-text');
+var _ss = document.getElementById('color-s-text');
+var _ll = document.getElementById('color-l-text');
+var _hex = document.getElementById('color-hex');
+var _hsl = document.getElementById('color-hsl');
+
+var _s_h = document.getElementById('slide-h');
+
+
+var color = document.getElementById('color');
+
+
+_s_h.style.background = rainBoxGradient();
+
+
+function rainBoxGradient() {
+	var css = '-webkit-linear-gradient(0';
+    for(var i = 0; i <= 360; i++) {
+    	css = css + ',' + 'hsl(' + i + ',100%,50%)';
+    }
+    	css += ')';
+	return css;
+}
+
+
+
+
+
+_h.onchange = function() {
+	//console.log(_h.value, _s.value, _l.value);
+	_hh.innerHTML = _h.value;
+	_hex.value = HSLtoHEX(_h.value, _s.value, _l.value);
+	_hsl.value = 'hsl(' + _h.value + ', ' + _s.value + ', ' + _l.value + ')'; 
+	color.style.background = 'hsl(' + _h.value + ',' + _s.value + '%,' + _l.value + '%)';
+}
+
+_s.onchange = function() {
+	//console.log(_h.value, _s.value, _l.value);
+	_ss.innerHTML = _s.value;
+	_hex.value = HSLtoHEX(_h.value, _s.value, _l.value);
+	_hsl.value = 'hsl(' + _h.value + ', ' + _s.value + ', ' + _l.value + ')'; 
+	color.style.background = 'hsl(' + _h.value + ',' + _s.value + '%,' + _l.value + '%)';
+}
+
+_l.onchange = function() {
+	//console.log(_h.value, _s.value, _l.value);
+	_ll.innerHTML = _l.value;
+	_hex.value = HSLtoHEX(_h.value, _s.value, _l.value);
+	_hsl.value = 'hsl(' + _h.value + ', ' + _s.value + ', ' + _l.value + ')'; 
+	color.style.background = 'hsl(' + _h.value + ',' + _s.value + '%,' + _l.value + '%)';
+}
+
+_hex.onchange = function() {
+	var hsl = HEXtoHSL(this.value);
+	_h.value = hsl[0];
+	_hh.innerHTML = hsl[0];
+	_s.value = hsl[1];
+	_ss.innerHTML = hsl[1];
+	_l.value = hsl[2];
+	_ll.innerHTML = hsl[2];
+
+	_hsl.value = 'hsl(' + _h.value + ', ' + _s.value + ', ' + _l.value + ')'; 
+	color.style.background = 'hsl(' + _h.value + ',' + _s.value + '%,' + _l.value + '%)';
+}
+
+window.onload = function() {
+	_hh.innerHTML = _h.value;
+	_ss.innerHTML = _s.value;
+	_ll.innerHTML = _l.value;
+	_hex.value = HSLtoHEX(_h.value, _s.value, _l.value);
+	_hsl.value = 'hsl(' + _h.value + ', ' + _s.value + ', ' + _l.value + ')'; 
+	color.style.background = 'hsl(' + _h.value + ',' + _s.value + '%,' + _l.value + '%)';
+}
+
+function addValue(id, value, maxValue) {
+	var v1 = Number (document.getElementById(id).value);
+	var v2 = (v1 + value) > maxValue ? ((v1 + value) - maxValue) : (v1 + value);
+	document.getElementById(id).value = v2;
+
+	console.log(v2);
+
+	
+		_hh.innerHTML = _h.value;
+		_ss.innerHTML = _s.value;
+		_ll.innerHTML = _l.value;
+		_hex.value = HSLtoHEX(_h.value, _s.value, _l.value);
+		_hsl.value = 'hsl(' + _h.value + ', ' + _s.value + ', ' + _l.value + ')';
+		color.style.background = 'hsl(' + _h.value + ',' + _s.value + '%,' + _l.value + '%)';
+
+	
+}
+
+function minusValue(id, value, maxValue) {
+	var v1 = Number (document.getElementById(id).value);
+	var v2 = (v1 - value) < 0 ? (maxValue + v1 - value) : (v1 - value);
+	document.getElementById(id).value = v2;
+
+	console.log(v2);
+
+	
+		_hh.innerHTML = _h.value;
+		_ss.innerHTML = _s.value;
+		_ll.innerHTML = _l.value;
+		_hex.value = HSLtoHEX(_h.value, _s.value, _l.value);
+		_hsl.value = 'hsl(' + _h.value + ', ' + _s.value + ', ' + _l.value + ')';
+		color.style.background = 'hsl(' + _h.value + ',' + _s.value + '%,' + _l.value + '%)';
+
+	
+}
+
+
+
+
+
+
+function updataInterface(){}
+
+
+
+function HSLtoHEX(h, s, l) {
+	var hex_r = HSLtoRGB(h, s, l)[0].toString(16);
+	var hex_g = HSLtoRGB(h, s, l)[1].toString(16);
+	var hex_b = HSLtoRGB(h, s, l)[2].toString(16);
+
+	hex_r = (hex_r.length == 1) ? '0' + hex_r : hex_r;
+	hex_g = (hex_g.length == 1) ? '0' + hex_g : hex_g;
+	hex_b = (hex_b.length == 1) ? '0' + hex_b : hex_b;
+
+	return hex_r + hex_g + hex_b;
+}
+
+/**
+ * @param   Number  h       The hue
+ * @param   Number  s       The saturation
+ * @param   Number  l       The lightness
+ * @return  Array           The RGB representation
+ */
+function HSLtoRGB(h, s, l) {
+	h = h / 360;
+	s = s / 100;
+	l = l / 100;
+
+	var r, g, b;
+
+    if(s == 0){
+        r = g = b = l; // achromatic
+    }else{
+        function hue2rgb(p, q, t){
+            if(t < 0) t += 1;
+            if(t > 1) t -= 1;
+            if(t < 1/6) return p + (q - p) * 6 * t;
+            if(t < 1/2) return q;
+            if(t < 2/3) return p + (q - p) * (2/3 - t) * 6;
+            return p;
+        }
+
+        var q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+        var p = 2 * l - q;
+        r = hue2rgb(p, q, h + 1/3);
+        g = hue2rgb(p, q, h);
+        b = hue2rgb(p, q, h - 1/3);
+    }
+
+    return [Math.round(r*255), Math.round(g*255), Math.round(b*255)];
+}
+
+/**
+ * Converts an RGB color value to HSL. Conversion formula
+ * adapted from http://en.wikipedia.org/wiki/HSL_color_space.
+ * Assumes r, g, and b are contained in the set [0, 255] and
+ * returns h, s, and l in the set [0, 1].
+ *
+ * @param   Number  r       The red color value
+ * @param   Number  g       The green color value
+ * @param   Number  b       The blue color value
+ * @return  Array           The HSL representation
+ */
+function RGBtoHSL(r, g, b) {
+	r /= 255, g /= 255, b /= 255;
+    var max = Math.max(r, g, b), min = Math.min(r, g, b);
+    var h, s, l = (max + min) / 2;
+
+    if(max == min){
+        h = s = 0; // achromatic
+    }else{
+        var d = max - min;
+        s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+        switch(max){
+            case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+            case g: h = (b - r) / d + 2; break;
+            case b: h = (r - g) / d + 4; break;
+        }
+        h /= 6;
+    }
+
+    return [Math.round(h*360), Math.round(s*100), Math.round(l*100)];
+}
+
+function HEXtoHSL(hex) {
+	var r = parseInt(hex.substring(0,2), 16),
+		g = parseInt(hex.substring(2,4), 16),
+		b = parseInt(hex.substring(4,6), 16);
+	return RGBtoHSL(r, g, b);
+}
+
+
+
+
+</script>
+</body>
+</html>

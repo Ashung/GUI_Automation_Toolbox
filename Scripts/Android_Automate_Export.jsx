@@ -131,15 +131,13 @@ traverseLayersAMFlat(activeDocument, function(){
             
             // Change Fill Color
             //changeSolidColor(0, 0, 0);
+            /**/
             
             if(activeDocument.activeLayer.name == '=') {
                 activeDocument.activeLayer.visible = false;
             }
             
-            // Hide shadow layer
-            if(activeDocument.activeLayer.name == 'shadow') {
-                activeDocument.activeLayer.visible = false;
-            }
+
             // Crop
             if(activeDocument.activeLayer.name == '#') {
                 selectAlphaChannel();
@@ -147,6 +145,9 @@ traverseLayersAMFlat(activeDocument, function(){
                 activeDocument.crop(activeDocument.selection.bounds);
             }
         });
+    
+    
+    
         /**/
         
         
@@ -211,7 +212,7 @@ traverseLayersAMFlat(activeDocument, function(){
             exportAssets('xxxhdpi');
             //activeDocument.activeHistoryState = activeDocument.historyStates.getByName ('__');
         }
-        
+        $.writeln('____________________________________________________');
         activeDocument.close(SaveOptions.DONOTSAVECHANGES);
     }
 
@@ -345,7 +346,7 @@ function exportAssets(dpiKeyword) {
     var targetFile = File(exportDir + '/drawable-' + dpiKeyword + '/' + iconName);
     exportPNG(targetFile);
     
-    $.writeln('____________________________________________________');
+    
     try {
         activeDocument.activeHistoryState = activeDocument.historyStates.getByName ('__');
     } catch(e) {}

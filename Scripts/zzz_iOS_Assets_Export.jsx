@@ -2,7 +2,7 @@
 
 
 
-#target 'photoshop';
+
 
 var NormalToRetina;
 

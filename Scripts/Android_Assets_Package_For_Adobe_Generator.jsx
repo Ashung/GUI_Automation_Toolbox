@@ -26,7 +26,6 @@
  *
  */
 
-#target 'photoshop';
 
 (function(){
     'use strict'

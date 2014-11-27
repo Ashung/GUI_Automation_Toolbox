@@ -17,13 +17,13 @@
 * @@@BUILDINFO@@@ Android_Layer_Namer_For_Adobe_Generator.jsx !Version! Mon Jun 30 2014 21:14:42 GMT+0800
 */
 /*
- * Android Layer Namer For Adobe Generator
+ * Android Layer Namer For Adobe Generator (Photoshop CC 14.2)
  * 
  * Rename layer like 'x_mdpi.png, 150% x_hdpi.png', then generate multi density assets.
  * After asset generated use 'Android_Asset_Package_For_Adobe_Generator.jsx' to put assets to 
  * different folder, and change the file name.
  *
- * Only support MDPI and XHDPI psd files, because Adobe Generator can't sacle 66.66% (XXHDPI to XHDPI).
+ * Only support MDPI and XHDPI psd files, because Adobe Generator(Photoshop CC 14.2) can't sacle 66.66% (XXHDPI to XHDPI).
  * 
  * Author: Ashung Hung
  *
