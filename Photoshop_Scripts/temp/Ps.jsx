@@ -15,7 +15,7 @@
  */
 /*
  *
- * Version: 0
+ * Version: 1.0.0
  * Author: Ashung Hung (Ashung.hung@gmail.com)
  *
  */

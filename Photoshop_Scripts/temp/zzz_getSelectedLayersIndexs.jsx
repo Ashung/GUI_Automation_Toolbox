@@ -54,9 +54,9 @@ for(var i = 0; i < selectedLayers.length; i++) {
 
     $.writeln(activeDocument.activeLayer.name)
     
-    if(activeDocument.activeLayer.typename == 'LayerSet') {
-        activeDocument.activeLayer.name = activeDocument.activeLayer.name + '.png';
-    }
+    //if(activeDocument.activeLayer.typename == 'LayerSet') {
+        activeDocument.activeLayer.name = activeDocument.activeLayer.name.replace('_light', '');
+    //}
 }
 
 /*

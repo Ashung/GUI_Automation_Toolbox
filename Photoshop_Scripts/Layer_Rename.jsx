@@ -82,15 +82,15 @@
     LRD.t.t1.btn1.onClick = function() {
         replaceStr(LRD.layerName.layerNameText.text, '#');
     }
-    LRD.t.t1.btn2 = LRD.t.t1.add('button', undefined, '@main');
+    LRD.t.t1.btn2 = LRD.t.t1.add('button', undefined, '@hide');
     LRD.t.t1.btn2.size = [50, 25];
     LRD.t.t1.btn2.onClick = function() {
-        replaceStr(LRD.layerName.layerNameText.text, '@main');
+        replaceStr(LRD.layerName.layerNameText.text, '@hide');
     }
-    LRD.t.t1.btn3 = LRD.t.t1.add('button', undefined, '@bg');
-    LRD.t.t1.btn3.size = [40, 25];
+    LRD.t.t1.btn3 = LRD.t.t1.add('button', undefined, '@bounds');
+    LRD.t.t1.btn3.size = [65, 25];
     LRD.t.t1.btn3.onClick = function() {
-        replaceStr(LRD.layerName.layerNameText.text, '@bg');
+        replaceStr(LRD.layerName.layerNameText.text, '@bounds');
     }
     LRD.t.t1.btn4 = LRD.t.t1.add('button', undefined, 'main');
     LRD.t.t1.btn4.size = [40, 25];

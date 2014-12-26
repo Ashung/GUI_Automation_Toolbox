@@ -1,10 +1,12 @@
-# Ps Automation Kits
+# GUI Automation Toolbox
 
-Photoshop script for smart designer.
+Scripts that automate your Android, iOS GUI design workflow.
 
-###Android Design Scripts
+----
 
-####Android_App_Icons_Template.jsx & Android_App_Icons_Template_Export.jsx
+##Scripts for Android GUI
+
+###Android_App_Icons_Template.jsx & Android_App_Icons_Template_Export.jsx
 用于自动生成Android App图标模板和导出图标.
 
 1, 运行Android_App_Icons_Template.jsx生成Android App图标模板.
@@ -12,7 +14,7 @@ Photoshop script for smart designer.
 
 ---
 
-####Android_Assets_Export.jsx
+###Android_Assets_Export.jsx
 用于资源导出Android各种DPI资源PNG及.9.PNG.
 
 1. 将要导出的PSD图层复制到新的文档中并调整画布大小.

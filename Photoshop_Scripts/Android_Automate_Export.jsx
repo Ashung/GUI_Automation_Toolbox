@@ -112,9 +112,10 @@ traverseLayersAMFlat(activeDocument, function(){
     if(/\.(png|jpg|gif)$/i.test(activeDocument.activeLayer.name)) {
         //$.writeln(activeDocument.activeLayer.name);
         
-        iconName = activeDocument.activeLayer.name;
+        iconNames = activeDocument.activeLayer.name;
         
-        $.writeln(iconName)
+        $.writeln(iconNames);
+
         
         // Get global light
         var globalLightAngle = getGlobalLightAngle();
@@ -134,7 +135,7 @@ traverseLayersAMFlat(activeDocument, function(){
             /**/
             
             if(activeDocument.activeLayer.name == '=') {
-                activeDocument.activeLayer.visible = false;
+                activeDocument.activeLayer.visible = true;
             }
             
 
@@ -146,18 +147,9 @@ traverseLayersAMFlat(activeDocument, function(){
             }
         });
     
-    
-    
-        /**/
-        
-        
-        
-        
-        
-        
+
         // Export PNGs
-        
-        
+
         activeDocument.suspendHistory('__', '');
         
         /**/
@@ -167,13 +159,16 @@ traverseLayersAMFlat(activeDocument, function(){
         if(!Folder(exportDir).exists) {
             Folder(exportDir).create();
         }
-    
+        
+        
         
         if(nodpi) {
             if(!Folder(exportDir + '/drawable-nodpi').exists) {
                 Folder(exportDir + '/drawable-nodpi').create();
             }
+        
             exportAssets('nodpi');
+            
             //activeDocument.activeHistoryState = activeDocument.historyStates.getByName ('__');
         }
 
@@ -343,8 +338,15 @@ function exportPNG(targetFile) {
 
 function exportAssets(dpiKeyword) {
     resize(density(dpiKeyword)/density(docDPI), 'Blnr');
-    var targetFile = File(exportDir + '/drawable-' + dpiKeyword + '/' + iconName);
-    exportPNG(targetFile);
+    
+    var imageNames = iconNames.split(',');
+    
+    for(var i = 0; i < imageNames.length; i++ ) {
+    
+        var targetFile = File(exportDir + '/drawable-' + dpiKeyword + '/' + imageNames[i].replace(' ', ''));
+    
+        exportPNG(targetFile);
+    }
     
     
     try {
