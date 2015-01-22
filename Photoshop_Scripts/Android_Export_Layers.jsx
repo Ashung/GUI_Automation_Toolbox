@@ -1,5 +1,32 @@
 /*
- * Copyright (c) 2014 Ashung Hung
+
+# Android Export Layers
+
+Export layers/groups to different Android DPIs size.
+
+Version: 20150122
+
+Author: [Ashung Hung](mailto:Ashung.hung@gmail.com)
+
+### Features
+
+* Export all layers/groups for multi sizes from one Photoshop document.
+* Custom Photoshop document DPI and export DPIs.
+* Custom export folder.
+* File prefix and suffix support.
+* Support export PNG-8, PNG-24, JPG-80, JPG-60.
+
+### Supported Photoshop Version
+Ps Version | Status
+---|---
+CC 2014 | Work
+CC | Work
+CS 6 | Untest
+CS 5 | Untest
+
+*/
+/*
+ * Copyright (c) 2015 Ashung Hung
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,23 +40,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/*
- * Android Export Layers to PNG
- * 
- * Export layers to multi-dpi png.
- *
- * Version: 20140904
- * Author: Ashung Hung (Ashung.hung@gmail.com)
- *
- */
-
-
-
-
-
 
 (function(){
     'use strict'
+    
+    // Costum dialog UI here.
+    // Default Photoshop document dpi.
+    var psdDPI = 'mdpi';
+    // var psdDPI = 'xhdpi';
+    // DPIs you want to export by default.
+    var dpis = ['mdpi', 'hdpi', 'xhdpi', 'xxhdpi', 'xxxhdpi'];
+    // var dpis = ['xhdpi', 'xxhdpi', 'xxxhdpi'];
+    
+    if(documents.length == 0) {
+        alert('Open Photoshop document first.', 'Android Export Layers');
+        return;
+    }  
     
     var dlg = 
     "dialog {\
@@ -50,6 +76,30 @@
                 },\
             }\
         },\
+        imageType: Group {\
+            orientation: 'column',\
+            alignChildren: 'left', \
+            labelImageType: StaticText { text: 'Image Type:' },\
+            radioGroup: Group {\
+                orientation: 'row',\
+                png24: RadioButton { \
+                    value: true, \
+                    text: 'PNG-24' \
+                },\
+                png8: RadioButton { \
+                    value: false, \
+                    text: 'PNG-8' \
+                },\
+                jpg80: RadioButton { \
+                    value: false, \
+                    text: 'JPG-80' \
+                },\
+                jpg60: RadioButton { \
+                    value: false, \
+                    text: 'JPG-60' \
+                }\
+            }\
+        },\
         imageName: Group { \
             orientation: 'column',\
             alignChildren: 'left', \
@@ -61,7 +111,7 @@
         imageNamePrefix: Group { \
             orientation: 'column',\
             alignChildren: 'left', \
-            labelPrefix: StaticText { text: 'Image Name Prefix:' },\
+            labelPrefix: StaticText { text: 'Image Prefix and Suffix:' },\
             prefixText: EditText {\
                 size: [300, 25] \
             }\
@@ -120,18 +170,43 @@
     // Export all layer.
     var exportAllLayer = AEL.exportType.radioGroup.allLayers;
     
+    // Image Types.
+    var imageType = 'png24';
+    var imageExt = '.png';
+    var imageType_png24 = AEL.imageType.radioGroup.png24;
+    var imageType_png8 = AEL.imageType.radioGroup.png8;
+    var imageType_jpg80 = AEL.imageType.radioGroup.jpg80;
+    var imageType_jpg60 = AEL.imageType.radioGroup.jpg60;
+    
+    if(imageType == 'png24') {
+        imageType_png24.value = true;
+        imageExt = '.png';
+    }
+    if(imageType == 'png8') {
+        imageType_png8.value = true;
+        imageExt = '.png';
+    }
+    if(imageType == 'jpg80') {
+        imageType_jpg80.value = true;
+        imageExt = '.jpg';
+    }
+    if(imageType == 'jpg60') {
+        imageType_jpg60.value = true;
+        imageExt = '.jpg';
+    }
+
     // Initialize Image Name DropDownList.
     var imageNames = AEL.imageName.namesDPIList;
     var prefix = AEL.imageNamePrefix.prefixText;
         prefix.enabled = false;
-        
-        imageNames.add('item', 'layer_name.png');
-        imageNames.add('item', '[Prefix]_layer_name.png');
-        imageNames.add('item', 'layer_name_[Prefix].png');
-        imageNames.add('item', '[Prefix]_[1,2,3...].png (Name layer from top to bottom.)');
-        imageNames.add('item', '[Prefix]_[01,02,03...].png (Name layer from top to bottom.)');
-        imageNames.add('item', '[Prefix]_[001,002,003...].png (Name layer from top to bottom.)');
 
+        imageNames.add('item', 'layer_name' + imageExt);
+        imageNames.add('item', '[Prefix]_layer_name' + imageExt);
+        imageNames.add('item', 'layer_name_[Suffix]' + imageExt);
+        imageNames.add('item', '[Prefix]_[1,2,3...]' + imageExt + ' (From top to bottom)');
+        imageNames.add('item', '[Prefix]_[01,02,03...]' + imageExt + ' (From top to bottom)');
+        imageNames.add('item', '[Prefix]_[001,002,003...]' + imageExt + ' (From top to bottom)');
+        
         imageNames.selection = imageNames.items[0];
         
         imageNames.onChange = function() {
@@ -141,6 +216,35 @@
                 prefix.enabled = true;
             }
         }
+    
+    imageType_png24.onClick = function() {
+        imageType = 'png24'
+        imageExt = '.png';
+        changeDropDownList();
+    }
+    imageType_png8.onClick = function() {
+        imageType = 'png8'
+        imageExt = '.png';
+        changeDropDownList();
+    }
+    imageType_jpg80.onClick = function() {
+        imageType = 'jpg'
+        imageExt = '.jpg';
+        changeDropDownList();
+    }
+    imageType_jpg60.onClick = function() {
+        imageType = 'jpg'
+        imageExt = '.jpg';
+        changeDropDownList();
+    }
+    function changeDropDownList() {
+        imageNames.items[0].text = 'layer_name' + imageExt;
+        imageNames.items[1].text = '[Prefix]_layer_name' + imageExt;
+        imageNames.items[2].text = 'layer_name_[Suffix]' + imageExt;
+        imageNames.items[3].text = '[Prefix]_[1,2,3...]' + imageExt + ' (From top to bottom)';
+        imageNames.items[4].text = '[Prefix]_[01,02,03...]' + imageExt + ' (From top to bottom)';
+        imageNames.items[5].text = '[Prefix]_[001,002,003...]' + imageExt + ' (From top to bottom)';
+    }
         
     // Initialize Path.
     var outputFolder = AEL.outputFolder.outputForm.outputText;
@@ -165,13 +269,14 @@
     // Initialize docDPI DropDownList.
     var docDPIList = AEL.docDPI.docDPIList;
     var docDPI;
-    var dpis = ['mdpi', 'hdpi', 'xhdpi', 'xxhdpi', 'xxxhdpi'];
     
     for(var i = 0; i < dpis.length; i ++) {
         docDPIList.add('item', dpis[i]);
+        if(dpis[i] == psdDPI) {
+            docDPIList.selection = docDPIList.items[i];
+            docDPI = docDPIList.selection.text;
+        }
     }
-    docDPIList.selection = docDPIList.items[0];
-    docDPI = docDPIList.selection.text;
     docDPIList.onChange = function() {
         docDPI = docDPIList.selection.text;
     }
@@ -188,10 +293,28 @@
         this.enabled = false;
         
         var rootLayer = activeDocument;
-        if(exportAllLayer.value == false) {
+        if(!exportAllLayer.value) {
             rootLayer = activeDocument.activeLayer;
         }
         
+        // ImageType
+        if(imageType_png24.value) {
+            imageType = 'png24';
+            imageExt = 'png';
+        }
+        if(imageType_png8.value) {
+            imageType = 'png8';
+            imageExt = 'png';
+        }
+        if(imageType_jpg80.value) {
+            imageType = 'jpg';
+            imageExt = 'jpg';
+        }
+        if(imageType_jpg60.value) {
+            imageType = 'jpg';
+            imageExt = 'jpg';
+        }
+
         // exportDPIs
         var exportDPIs = [];
         for(var i = 0; i < dpis.length; i ++) {
@@ -218,26 +341,26 @@
             // Export layers
             for(var j = 0; j < rootLayer.layers.length; j ++) {
                 // layer_name.png
-                var outputImageName = rootLayer.layers[j].name.toLowerCase().replace(/ /g, '_').replace(/.(jpg|jpeg|gif|png)$/i, '') + '.png';
+                var outputImageName = rootLayer.layers[j].name.toLowerCase().replace(/ /g, '_').replace(/.(jpg|jpeg|gif|png)$/i, '') + '.' + imageExt;
                 // [Prefix]_layer_name.png
                 if(imageNames.selection.index == 1) {
                     outputImageName = prefix.text + '_' + outputImageName;
                 }
                 // layer_name_[Prefix].png
                 if(imageNames.selection.index == 2) {
-                    outputImageName = rootLayer.layers[j].name.toLowerCase().replace(/ /g, '_').replace(/.(jpg|jpeg|gif|png)$/i, '') + '_' + prefix.text + '.png';
+                    outputImageName = rootLayer.layers[j].name.toLowerCase().replace(/ /g, '_').replace(/.(jpg|jpeg|gif|png)$/i, '') + '_' + prefix.text + '.' + imageExt;
                 }
                 // [Prefix]_[1,2,3...].png
                 if(imageNames.selection.index == 3) {
-                    outputImageName = prefix.text + '_' + formatNumber(j+1, 1) + '.png';
+                    outputImageName = prefix.text + '_' + formatNumber(j+1, 1) + '.' + imageExt;
                 }
                 // [Prefix]_[01,02,03...].png
                 if(imageNames.selection.index == 4) {
-                    outputImageName = prefix.text + '_' + formatNumber(j+1, 2) + '.png';
+                    outputImageName = prefix.text + '_' + formatNumber(j+1, 2) + '.' + imageExt;
                 }
                 // [Prefix]_[01,02,03...].png
                 if(imageNames.selection.index == 5) {
-                    outputImageName = prefix.text + '_' + formatNumber(j+1, 3) + '.png';
+                    outputImageName = prefix.text + '_' + formatNumber(j+1, 3) + '.' + imageExt;
                 }
             
                 if(j > 0) {
@@ -245,15 +368,27 @@
                 }
                 rootLayer.layers[j].visible = true;
                 
-                exportPng(outputImageParent + outputImageName);
-                
-                $.writeln('x' + density(targetDPI)/density(docDPI) + ' -----> ' + outputImageParent + outputImageName);
+                // Export Default ImageType
+                if(imageType_png24.value) {
+                    exportPng(outputImageParent + outputImageName);
+                }
+                if(imageType_png8.value) {
+                    exportPng8(outputImageParent + outputImageName);
+                }
+                if(imageType_jpg80.value) {
+                    exportJpg(outputImageParent + outputImageName, 80);
+                }
+                if(imageType_jpg60.value) {
+                    exportJpg(outputImageParent + outputImageName, 60);
+                }
+
+                //$.writeln('x' + density(targetDPI)/density(docDPI) + ' -----> ' + outputImageParent + outputImageName);
             }
         
             activeDocument.activeHistoryState = activeDocument.historyStates.getByName('History_' + timeStamp);
         }
 
-        $.writeln('Completed!');
+        //$.writeln('Completed!');
         
         AEL.close();
     }
@@ -290,7 +425,7 @@
             desc1.putUnitDouble(charIDToTypeID('Wdth'), charIDToTypeID('#Prc'), scale * 100);
             desc1.putBoolean(stringIDToTypeID("scaleStyles"), true);
             desc1.putBoolean(charIDToTypeID('CnsP'), true);
-            desc1.putEnumerated(charIDToTypeID('Intr'), charIDToTypeID('Intp'), charIDToTypeID('Blnr'));
+            desc1.putEnumerated(charIDToTypeID('Intr'), charIDToTypeID('Intp'), charIDToTypeID('Bcbc'));
         executeAction(stringIDToTypeID('imageSize'), desc1, DialogModes.NO);
     }
 
@@ -314,6 +449,54 @@
             png24Options.interlaced = false;
             png24Options.includeProfile = false;
         activeDocument.exportDocument(File(path), ExportType.SAVEFORWEB, png24Options);
+    }
+
+    /*
+     * @param String path
+     */
+    function exportPng8(path) {
+        // Create Folder
+        if(!File(path).parent.exists) {
+            File(path).parent.create();
+        }
+        // File readonly
+        if(File(path).exists && File(path).readonly == true) {
+            File(path).readonly = false;
+        }
+        var png8Options = new ExportOptionsSaveForWeb();
+            png8Options.format = SaveDocumentType.PNG;
+            png8Options.PNG8 = true;
+            png8Options.colors = 256;
+            png8Options.colorReduction = ColorReductionType.PERCEPTUAL;
+            png8Options.dither = Dither.NONE;
+            png8Options.transparency = true;
+            png8Options.matteColor = app.backgroundColor.rgb;
+            png8Options.interlaced = false;
+            png8Options.includeProfile = false;
+        activeDocument.exportDocument(File(path), ExportType.SAVEFORWEB, png8Options);
+    }
+
+    /*
+     * @param String path
+     * @param Number quality 
+     */
+    function exportJpg(path, quality) {
+        // Create Folder
+        if(!File(path).parent.exists) {
+            File(path).parent.create();
+        }
+        // File readonly
+        if(File(path).exists && File(path).readonly == true) {
+            File(path).readonly = false;
+        }
+        var jpgOptions = new ExportOptionsSaveForWeb();
+            jpgOptions.format = SaveDocumentType.JPEG;
+            jpgOptions.optimized = true;
+            jpgOptions.quality = quality;
+            jpgOptions.matteColor = app.backgroundColor.rgb;
+            jpgOptions.interlaced = false;
+            jpgOptions.includeProfile = false;
+        activeDocument.exportDocument(File(path), ExportType.SAVEFORWEB, jpgOptions);
     }
 
     /*

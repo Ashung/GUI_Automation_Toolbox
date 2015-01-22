@@ -1,5 +1,33 @@
 /*
- * Copyright (c) 2014 Ashung Hung
+
+# Android Assets Export
+
+Automation resize Photoshop document, then exprot PNGs for different Android DPIs.
+
+Version: 20150120
+
+Author: [Ashung Hung](mailto:Ashung.hung@gmail.com)
+
+### Features
+
+* Export for multi DPIs from one Photoshop document.
+* Custom Photoshop document DPI and export DPIs.
+* Custom export folder and file name.
+* Nine-patch support.
+* Nodpi folder support.
+* Drawable or mipmap folder support.
+
+### Supported Photoshop Version
+Ps Version | Status
+---|---
+CC 2014 | Work
+CC | Work
+CS 6 | Untest
+CS 5 | Untest
+
+*/
+/*
+ * Copyright (c) 2015 Ashung Hung
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,27 +41,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/*
- * Android Assets Export
- * 
- * Automation resize psd file and exprot PNG for different dpi.
- *
- * Version: 20140729
- * LastModify: 20141118
- * Author: Ashung Hung (Ashung.hung@gmail.com)
- *
- */
 
 (function(){
     'use strict'
 
-    if(documents.length == 0) {
-        // $.writeln('NO DOCUMENTS!');
-        return;
-    }
-        
-    // Default dpi config.
+    // Costum dialog UI here.
+    // Default Photoshop document dpi.
     var psdDPI = 'mdpi';
+    // var psdDPI = 'xhdpi';
+    // DPIs you want to export by default.
+    var dpis = ['mdpi', 'hdpi', 'xhdpi', 'xxhdpi', 'xxxhdpi'];
+    // var dpis = ['xhdpi', 'xxhdpi', 'xxxhdpi'];
+
+    if(documents.length == 0) {
+        alert('Open Photoshop document first.', 'Android Assets Export');
+        return;
+    }    
 
     var ui = 
     "dialog {\
@@ -79,6 +102,22 @@
                 text: 'Yes.'\
             }\
         },\
+        resFolder: Group {\
+            orientation: 'column',\
+            alignChildren: 'left', \
+            labelResFolder: StaticText { text: 'Resource Folder:'},\
+            resFolders: Group {\
+                orientation: 'row', \
+                resFolderDrawable: RadioButton {\
+                    value: true,\
+                    text: 'Drawable'\
+                },\
+                resFolderMipmap: RadioButton {\
+                    value: false,\
+                    text: 'Mipmap'\
+                }\
+            }\
+        },\
         exportDPI: Group {\
             orientation: 'column',\
             alignChildren: 'left', \
@@ -112,7 +151,6 @@
     var path = AAE.exportPath.pathFormItem.pathText;
     var browser = AAE.exportPath.pathFormItem.pathBrowser;
     var fileName = AAE.exportFileName.fileNameText;
-    var dpis = ['mdpi', 'hdpi', 'xhdpi', 'xxhdpi', 'xxxhdpi'];
     
     var firstTimeRun = true;
     var d = new Date();
@@ -181,30 +219,39 @@
         eval('AAE.exportDPI.dpis.' + dpi + '.value = true');
         eval(dpi + ' = AAE.exportDPI.dpis.' + dpi);
     }
+
+    // Resource Folder
+    var resFolderDrawable = AAE.resFolder.resFolders.resFolderDrawable;
+    var resFolderMipmap   = AAE.resFolder.resFolders.resFolderMipmap;
     
     // Button event.
     AAE.buttons.runBtn.onClick = function() {
         
         this.enabled = false;
         
+        var resFolder = 'drawable';
+        if(resFolderMipmap.value) {
+            resFolder = 'mipmap';
+        }
+
         if(nodpi.value) {
-            exportAssets('nodpi');
+            exportAssets(resFolder, 'nodpi');
         }
 
         if(mdpi.value) {
-            exportAssets('mdpi');
+            exportAssets(resFolder, 'mdpi');
         }
         if(hdpi.value) {
-            exportAssets('hdpi');
+            exportAssets(resFolder, 'hdpi');
         }
         if(xhdpi.value) {
-            exportAssets('xhdpi');
+            exportAssets(resFolder, 'xhdpi');
         }
         if(xxhdpi.value) {
-            exportAssets('xxhdpi');
+            exportAssets(resFolder, 'xxhdpi');
         }
         if(xxxhdpi.value) {
-            exportAssets('xxxhdpi');
+            exportAssets(resFolder, 'xxxhdpi');
         }
     
         //$.writeln('Completed!');
@@ -213,14 +260,14 @@
     }
     
 
-    function exportAssets(dpiKeyword) {
+    function exportAssets(resFolderKeyword, dpiKeyword) {
         if(firstTimeRun) {
             activeDocument.suspendHistory('__' + docDPI + '__' + timeStamp, '');
         }
         
         if(ninePatch.value) {
             ninePatchResize(density(dpiKeyword)/density(docDPI));
-            var targetFile = File(path.text + '/drawable-' + dpiKeyword + '/' + fileName.text + '.9.png');
+            var targetFile = File(path.text + '/' + resFolderKeyword + '-' + dpiKeyword + '/' + fileName.text + '.9.png');
             exportPNG(targetFile);
         } else {
             if(isImageFile) {
@@ -228,8 +275,7 @@
             } else {
                 resize(density(dpiKeyword)/density(docDPI));
             }
-            
-            var targetFile = File(path.text + '/drawable-' + dpiKeyword + '/' + fileName.text + '.png');
+            var targetFile = File(path.text + '/' + resFolderKeyword + '-' + dpiKeyword + '/' + fileName.text + '.png');
             exportPNG(targetFile);
         }
         
@@ -272,7 +318,7 @@
     // Blnr, Nrst, Bcbc, bicubicSmoother, bicubicSharper, automaticInterpolation, 
     function resize(scale, resampleCharID) {
         if(resampleCharID == undefined) {
-            resampleCharID = 'Blnr';
+            resampleCharID = 'Bcbc';
         }
 
         var desc1 = new ActionDescriptor();
@@ -305,5 +351,7 @@
         
         //$.writeln('--> ' +  targetFile.fsName);
     }
+
+    
 
 })();

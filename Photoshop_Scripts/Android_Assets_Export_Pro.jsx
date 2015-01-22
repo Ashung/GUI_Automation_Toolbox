@@ -76,6 +76,22 @@
                 }\
             }\
         },\
+        resFolder: Group {\
+            orientation: 'column',\
+            alignChildren: 'left', \
+            labelResFolder: StaticText { text: 'Resource Folder:'},\
+            resFolders: Group {\
+                orientation: 'row', \
+                resFolderDrawable: RadioButton {\
+                    value: true,\
+                    text: 'Drawable'\
+                },\
+                resFolderMipmap: RadioButton {\
+                    value: false,\
+                    text: 'Mipmap'\
+                }\
+            }\
+        },\
         exportDPI: Group {\
             orientation: 'column',\
             alignChildren: 'left', \

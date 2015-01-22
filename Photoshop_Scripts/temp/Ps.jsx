@@ -364,7 +364,6 @@ function selectTool(tool) {
     executeAction( app.charIDToTypeID('slct'), desc9, DialogModes.NO );
 };
 
-
 _Ps._Windows._History._NewSnapShot(name) {
     var idMk = charIDToTypeID("Mk  ");
     var desc1 = new ActionDescriptor();
@@ -377,4 +376,30 @@ _Ps._Windows._History._NewSnapShot(name) {
         desc1.putString(charIDToTypeID("Nm  "), name);
         desc1.putEnumerated(charIDToTypeID("Usng"), charIDToTypeID("HstS"), charIDToTypeID("FllD"));
         executeAction(idMk, desc1, DialogModes.NO);
+}
+
+_Ps._Windows._Swatches._NewSwatch(color, name) {
+    var red = color.rgb.red;
+    var green = color.rgb.green;
+    var blue = color.rgb.blue;
+    //
+    var addColorDescriptor = new ActionDescriptor();
+    // Get reference to Swatches panel
+    var swatchesPanelReference = new ActionReference();
+    swatchesPanelReference.putClass(stringIDToTypeID('colors'));
+    addColorDescriptor.putReference(stringIDToTypeID('null'), swatchesPanelReference);
+    // Setup a swatch and give it a name
+    var descriptorSwatch = new ActionDescriptor();
+    descriptorSwatch.putString(stringIDToTypeID('name'), name);
+    // Add RGB color information to the swatch
+    var descriptorColor = new ActionDescriptor();
+    descriptorColor.putDouble(stringIDToTypeID('red'), red);
+    descriptorColor.putDouble(stringIDToTypeID('grain'), green); // grain = green
+    descriptorColor.putDouble(stringIDToTypeID('blue'), blue);
+    // Add RGB to the swatch
+    descriptorSwatch.putObject(stringIDToTypeID('color'), stringIDToTypeID('RGBColor'), descriptorColor);
+    // Add swatch to the color descriptor
+    addColorDescriptor.putObject(stringIDToTypeID('using'), stringIDToTypeID('colors'), descriptorSwatch);
+    // Send to Photoshop
+    executeAction(stringIDToTypeID('make'), addColorDescriptor, DialogModes.NO);
 }
