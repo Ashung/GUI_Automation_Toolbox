@@ -27,8 +27,8 @@ Ps Version | Status
 ---|---
 CC 2014 | Work
 CC | Work
-CS 6 | Untest
-CS 5 | Untest
+CS 6 | No Test
+CS 5 | No Test
 
 ----
 
@@ -51,5 +51,5 @@ Ps Version | Status
 ---|---
 CC 2014 | Work
 CC | Work
-CS 6 | Untest
-CS 5 | Untest
+CS 6 | No Test
+CS 5 | No Test
