@@ -67,7 +67,7 @@ CS 5 | No Test
             alignChildren: 'left', \
             labelFiles: StaticText { text: 'Your document DPI (mdpi/xhdpi recommend):' },\
             docDPIList: DropDownList {\
-                size: [300, 25] \
+                size: [400, 25] \
             }\
         },\
         exportPath: Group {\
@@ -77,7 +77,7 @@ CS 5 | No Test
             pathFormItem: Group {\
                 orientation: 'row',\
                 pathText: EditText {\
-                    size: [210, 25] \
+                    size: [310, 25] \
                 },\
                 pathBrowser: Button { \
                     text: 'Browser...', \
@@ -90,18 +90,17 @@ CS 5 | No Test
             alignChildren: 'left', \
             labelFiles: StaticText { text: 'File name (Not include \".png/.9.png\"):' },\
             fileNameText: EditText {\
-                size: [300, 25] \
+                size: [400, 25] \
             }\
         },\
         ninePatch: Group {\
             orientation: 'column',\
             alignChildren: 'left', \
-            labelNinePatch: StaticText { text: 'Nine-Patch:'},\
             checkboxNinePatch: Checkbox {\
                 value: false,\
-                text: 'Yes.'\
+                text: ' Nine-Patch Image.'\
             }\
-        },\
+        }\
         resFolder: Group {\
             orientation: 'column',\
             alignChildren: 'left', \
@@ -110,11 +109,11 @@ CS 5 | No Test
                 orientation: 'row', \
                 resFolderDrawable: RadioButton {\
                     value: true,\
-                    text: 'Drawable'\
+                    text: 'drawable-xxx'\
                 },\
                 resFolderMipmap: RadioButton {\
                     value: false,\
-                    text: 'Mipmap'\
+                    text: 'mipmap-xxx'\
                 }\
             }\
         },\
@@ -123,14 +122,14 @@ CS 5 | No Test
             alignChildren: 'left', \
             labelExport: StaticText { text: 'Export:'},\
             dpis: Group {\
-                orientation: 'row' \
-            }\
-            nodpi: Checkbox {\
-                value: false,\
-                text: 'nodpi'\
+                orientation: 'row', \
+                nodpi: Checkbox {\
+                    value: false,\
+                    text: 'nodpi'\
+                }\
             }\
         },\
-        separator2: Panel { preferredSize: [300, 0] },\
+        separator2: Panel { preferredSize: [400, 0] },\
         buttons: Group {\
             orientation: 'row',\
             cancelBtn: Button {\
@@ -143,7 +142,59 @@ CS 5 | No Test
             }\
         }\
     }";
-   
+/*
+            separator1: Panel { preferredSize: [300, 0] },\
+        compatibility: Group {\
+            orientation: 'column',\
+            alignChildren: 'left', \
+            items1: Group {\
+                orientation: 'row',\
+                label: StaticText { text: 'Language and region:' },\
+                list: DropDownList {\
+                    size: [80, 25] \
+                }\
+            },\
+            items2: Group {\
+                orientation: 'row',\
+                label: StaticText { text: 'Screen orientation:' },\
+                list: DropDownList {\
+                    size: [80, 25] \
+                }\
+            },\
+            items3: Group {\
+                label: StaticText { text: 'Touch screentype:' },\
+                list: DropDownList {\
+                    size: [60, 25] \
+                }\
+            },\
+            items4: Group {\
+                label: StaticText { text: 'Keyboard:' },\
+                text: EditText {\
+                    size: [50, 25] \
+                }\
+            },\
+            items5: Group {\
+                labelSw: StaticText { text: 'Width:' },\
+                swText: EditText {\
+                    size: [50, 25] \
+                },\
+                labelSh: StaticText { text: 'Height:' },\
+                shText: EditText {\
+                    size: [50, 25] \
+                },\
+                labelOrigan: StaticText { text: 'Orig:' },\
+                orList: DropDownList {\
+                    size: [50, 25] \
+                },\
+                labelAPIlevel: StaticText { text: 'API level:' },\
+                APIlevelList: DropDownList {\
+                    size: [50, 25] \
+                }\
+            }\
+        },\
+        
+        
+        */
     var AAE = new Window(ui);
     
     var docDPIList = AAE.docDPI.docDPIList;
@@ -209,6 +260,8 @@ CS 5 | No Test
     }
     
     // Initialize Export DPI
+    
+    //// TODO 400dpi support
     var mdpi, hdpi, xhdpi, xxhdpi, xxxhdpi;
     var nodpi = AAE.exportDPI.nodpi;
     for(var i = 0; i < dpis.length; i ++) {
@@ -233,7 +286,11 @@ CS 5 | No Test
         if(resFolderMipmap.value) {
             resFolder = 'mipmap';
         }
-
+        
+        //// resFolder  Qualifier support
+        // http://www.linuxidc.com/Linux/2014-09/106825.htm
+        // http://blog.csdn.net/persuit/article/details/7663574
+        
         if(nodpi.value) {
             exportAssets(resFolder, 'nodpi');
         }
@@ -288,6 +345,8 @@ CS 5 | No Test
 
 
     function density(dpiKeyword) {
+        //// TODO: 400dpi support
+        
         switch(dpiKeyword.toLowerCase()) {
             case 'nodpi':
                 return density(docDPI);
