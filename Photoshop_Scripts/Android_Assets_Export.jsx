@@ -1,33 +1,5 @@
 /*
-
-# Android Assets Export
-
-Automation resize Photoshop document, then exprot PNGs for different Android DPIs.
-
-Version: 20150120
-
-Author: [Ashung Hung](mailto:Ashung.hung@gmail.com)
-
-### Features
-
-* Export for multi DPIs from one Photoshop document.
-* Custom Photoshop document DPI and export DPIs.
-* Custom export folder and file name.
-* Nine-patch support.
-* Nodpi folder support.
-* Drawable or mipmap folder support.
-
-### Supported Photoshop Version
-Ps Version | Status
----|---
-CC 2014 | Work
-CC | Work
-CS 6 | No Test
-CS 5 | No Test
-
-*/
-/*
- * Copyright (c) 2015 Ashung Hung
+ * Copyright (c) 2015 Ashung Hung (mailto:Ashung.hung@gmail.com)
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,6 +12,8 @@ CS 5 | No Test
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
+ * Project Home: github.com/Ashung/GUI_Automation_Toolbox
  */
 
 (function(){
@@ -51,7 +25,7 @@ CS 5 | No Test
     // var psdDPI = 'xhdpi';
     // DPIs you want to export by default.
     var dpis = ['mdpi', 'hdpi', 'xhdpi', 'xxhdpi', 'xxxhdpi'];
-    // var dpis = ['xhdpi', 'xxhdpi', 'xxxhdpi'];
+    // var dpis = ['nodpi', 'ldpi', 'mdpi', 'hdpi', 'tvdpi', 'xhdpi', '400dpi', 'xxhdpi', 'xxxhdpi'];
 
     if(documents.length == 0) {
         alert('Open Photoshop document first.', 'Android Assets Export');
@@ -122,11 +96,7 @@ CS 5 | No Test
             alignChildren: 'left', \
             labelExport: StaticText { text: 'Export:'},\
             dpis: Group {\
-                orientation: 'row', \
-                nodpi: Checkbox {\
-                    value: false,\
-                    text: 'nodpi'\
-                }\
+                orientation: 'row'\
             }\
         },\
         separator2: Panel { preferredSize: [400, 0] },\
@@ -196,13 +166,11 @@ CS 5 | No Test
         
         */
     var AAE = new Window(ui);
-    
     var docDPIList = AAE.docDPI.docDPIList;
     var docDPI;
     var path = AAE.exportPath.pathFormItem.pathText;
     var browser = AAE.exportPath.pathFormItem.pathBrowser;
     var fileName = AAE.exportFileName.fileNameText;
-    
     var firstTimeRun = true;
     var d = new Date();
     var timeStamp = d.getTime();
@@ -260,17 +228,13 @@ CS 5 | No Test
     }
     
     // Initialize Export DPI
-    
-    //// TODO 400dpi support
-    var mdpi, hdpi, xhdpi, xxhdpi, xxxhdpi;
-    var nodpi = AAE.exportDPI.nodpi;
     for(var i = 0; i < dpis.length; i ++) {
         makeCheckBox(dpis[i]);
     }
     function makeCheckBox(dpi) {
-        eval('AAE.exportDPI.dpis.' + dpi + ' = AAE.exportDPI.dpis.add("Checkbox", undefined, "' + dpi + '")');
-        eval('AAE.exportDPI.dpis.' + dpi + '.value = true');
-        eval(dpi + ' = AAE.exportDPI.dpis.' + dpi);
+        eval('AAE.exportDPI.dpis.$' + dpi + ' = AAE.exportDPI.dpis.add("Checkbox", undefined, "' + dpi + '")');
+        eval('AAE.exportDPI.dpis.$' + dpi + '.value = true');
+        eval('$' + dpi + ' = AAE.exportDPI.dpis.$' + dpi);
     }
 
     // Resource Folder
@@ -290,32 +254,13 @@ CS 5 | No Test
         //// resFolder  Qualifier support
         // http://www.linuxidc.com/Linux/2014-09/106825.htm
         // http://blog.csdn.net/persuit/article/details/7663574
-        
-        if(nodpi.value) {
-            exportAssets(resFolder, 'nodpi');
-        }
 
-        if(mdpi.value) {
-            exportAssets(resFolder, 'mdpi');
-        }
-        if(hdpi.value) {
-            exportAssets(resFolder, 'hdpi');
-        }
-        if(xhdpi.value) {
-            exportAssets(resFolder, 'xhdpi');
-        }
-        if(xxhdpi.value) {
-            exportAssets(resFolder, 'xxhdpi');
-        }
-        if(xxxhdpi.value) {
-            exportAssets(resFolder, 'xxxhdpi');
+        for(var i = 0; i < dpis.length; i ++) {
+            eval("if($" + dpis[i] + ".value){exportAssets(resFolder,'" + dpis[i] + "')}");
         }
     
-        //$.writeln('Completed!');
-        
         AAE.close();
     }
-    
 
     function exportAssets(resFolderKeyword, dpiKeyword) {
         if(firstTimeRun) {
@@ -323,14 +268,26 @@ CS 5 | No Test
         }
         
         if(ninePatch.value) {
-            ninePatchResize(density(dpiKeyword)/density(docDPI));
+            if(dpiKeyword == 'nodpi') {
+                ninePatchResize(1);
+            } else {
+                ninePatchResize(density(dpiKeyword)/density(docDPI));
+            }
             var targetFile = File(path.text + '/' + resFolderKeyword + '-' + dpiKeyword + '/' + fileName.text + '.9.png');
             exportPNG(targetFile);
         } else {
             if(isImageFile) {
-                resize(density(dpiKeyword)/density(docDPI), 'Bcbc');
+                if(dpiKeyword == 'nodpi') {
+                    resize(1);
+                } else {
+                    resize(density(dpiKeyword)/density(docDPI), 'Bcbc');
+                }
             } else {
-                resize(density(dpiKeyword)/density(docDPI));
+                if(dpiKeyword == 'nodpi') {
+                    resize(1);
+                } else {
+                    resize(density(dpiKeyword)/density(docDPI));
+                }
             }
             var targetFile = File(path.text + '/' + resFolderKeyword + '-' + dpiKeyword + '/' + fileName.text + '.png');
             exportPNG(targetFile);
@@ -342,33 +299,32 @@ CS 5 | No Test
     
     AAE.show();
 
-
-
     function density(dpiKeyword) {
-        //// TODO: 400dpi support
-        
-        switch(dpiKeyword.toLowerCase()) {
-            case 'nodpi':
-                return density(docDPI);
-            case 'ldpi':
-                return 120;
-            case 'mdpi':
-                return 160;
-            case 'hdpi':
-                return 240;
-            case 'xhdpi':
-                return 320;
-            case 'xxhdpi':
-                return 480;
-            case 'xxxhdpi':
-                return 640;
-            default:
-                return 160;
+        if(parseInt(dpiKeyword) > 0) {
+            return parseInt(dpiKeyword);
+        } else {
+            switch(dpiKeyword.toLowerCase()) {
+                case 'ldpi':
+                    return 120;
+                case 'mdpi':
+                    return 160;
+                case 'tvdpi':
+                    return 213;
+                case 'hdpi':
+                    return 240;
+                case 'xhdpi':
+                    return 320;
+                case 'xxhdpi':
+                    return 480;
+                case 'xxxhdpi':
+                    return 640;
+                default:
+                    return 160;
+            }
         }
     }
     
     function ninePatchResize(scale) {
-        //$.writeln('x' +  scale);
         activeDocument.resizeCanvas(activeDocument.width.as('px') - 2, activeDocument.height.as('px') - 2, AnchorPosition.MIDDLECENTER);
         resize(scale, 'Nrst');
         activeDocument.resizeCanvas(activeDocument.width.as('px') + 2, activeDocument.height.as('px') + 2, AnchorPosition.MIDDLECENTER);
@@ -410,7 +366,5 @@ CS 5 | No Test
         
         //$.writeln('--> ' +  targetFile.fsName);
     }
-
-    
 
 })();

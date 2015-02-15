@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014 Ashung Hung
+ * Copyright (c) 2015 Ashung Hung (Ashung.hung@gmail.com)
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,12 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/*
- *
- * Version: 1.0.0
- * Author: Ashung Hung (Ashung.hung@gmail.com)
- *
- */
+
+
+
+
 
 var _Ps = {
     _File: {},
@@ -41,9 +39,9 @@ var _Ps = {
         _Layers: {},
         _Paths: {},
         _Styles: {},
-        _Swatches: {},
-        _Tools: {},
-    }
+        _Swatches: {}
+    },
+    _Tools: {}
 }
 
 
@@ -62,6 +60,24 @@ _Ps._File._Open = function() {
 _Ps._File._Script = function() {
     alert(1);
 }
+
+/*
+ * @param File targetFile
+ */
+_Ps._File._Place_Linked = function(targetFile) {
+    var idPlc = charIDToTypeID("Plc ");
+    var desc1 = new ActionDescriptor();
+    var idnull = charIDToTypeID("null");
+        desc1.putPath( idnull, targetFile);
+    var idLnkd = charIDToTypeID("Lnkd");
+        desc1.putBoolean(idLnkd, true);
+    var idFTcs = charIDToTypeID("FTcs");
+    var idQCSt = charIDToTypeID("QCSt");
+    var idQcszero = charIDToTypeID("Qcs0");
+        desc1.putEnumerated(idFTcs, idQCSt, idQcszero);
+        executeAction(idPlc, desc1, DialogModes.NO);
+}
+
 
 _Ps._File._Save_As = {
     _Psd: function() {},
@@ -83,12 +99,47 @@ _Ps._File._Save_As = {
 }
 
 _Ps._File._Save_As_Web = {
-    _Png8: function() {},
+    /*
+     * @param File targetFile 
+     * @param color Number [2,4,8,16,32,64,128,256]
+     * @param matte SolidColor
+     */
+    _Png8: function(targetFile, color, matte) {
+        // Create Folder
+        if(!targetFile.parent.exists) {
+            targetFile.parent.create();
+        }
+        // File readonly
+        if(targetFile.exists && targetFile.readonly == true) {
+            targetFile.readonly = false;
+        }
+        var png8Options = new ExportOptionsSaveForWeb();
+            png8Options.format = SaveDocumentType.PNG;
+            png8Options.PNG8 = true;
+            png8Options.colors = color;
+            //png8Options.colors = 256;
+            png8Options.colorReduction = ColorReductionType.PERCEPTUAL;
+            png8Options.dither = Dither.NONE;
+            png8Options.transparency = true;
+            //png8Options.matteColor = matte.rgb
+            //png8Options.matteColor = app.backgroundColor.rgb;
+            png8Options.interlaced = false;
+            png8Options.includeProfile = false;
+        activeDocument.exportDocument(File(path), ExportType.SAVEFORWEB, png8Options);
+    },
     
     /*
      * @param File targetFile 
      */
     _Png24: function(targetFile) {
+        // Create Folder
+        if(!targetFile.parent.exists) {
+            targetFile.parent.create();
+        }
+        // File readonly
+        if(targetFile.exists && targetFile.readonly == true) {
+            targetFile.readonly = false;
+        }
         var png24Options = new ExportOptionsSaveForWeb();
             png24Options.format = SaveDocumentType.PNG;
             png24Options.PNG8 = false;
@@ -98,7 +149,28 @@ _Ps._File._Save_As_Web = {
         activeDocument.exportDocument(targetFile, ExportType.SAVEFORWEB, png24Options);
     },
 
-    _Jpg: function() {},
+    /*
+     * @param File targetFile
+     * @param Number quality [0-100]
+     */
+    _Jpg: function(targetFile, quality) {
+        // Create Folder
+        if(!targetFile.parent.exists) {
+            targetFile.parent.create();
+        }
+        // File readonly
+        if(targetFile.exists && targetFile.readonly == true) {
+            targetFile.readonly = false;
+        }
+        var jpgOptions = new ExportOptionsSaveForWeb();
+            jpgOptions.format = SaveDocumentType.JPEG;
+            jpgOptions.optimized = true;
+            jpgOptions.quality = quality;
+            jpgOptions.matteColor = app.backgroundColor.rgb;
+            jpgOptions.interlaced = false;
+            jpgOptions.includeProfile = false;
+        activeDocument.exportDocument(targetFile, ExportType.SAVEFORWEB, jpgOptions);
+    },
     _Gif: function() {}
 }
 
@@ -296,6 +368,66 @@ _Ps._View._Clear_Slices = function() {
 // Window
 ///////////////////////////////////////////////////////////////////////////////
 
+
+_Ps._Windows._History._NewSnapShot(name) {
+    var idMk = charIDToTypeID("Mk  ");
+    var desc1 = new ActionDescriptor();
+    var ref1 = new ActionReference();
+        ref1.putClass(charIDToTypeID("SnpS"));
+        desc1.putReference(charIDToTypeID("null"), ref1);
+    var ref2 = new ActionReference();
+        ref2.putProperty(charIDToTypeID("HstS"), charIDToTypeID("CrnH"));
+        desc1.putReference(charIDToTypeID("From"), ref2);
+        desc1.putString(charIDToTypeID("Nm  "), name);
+        desc1.putEnumerated(charIDToTypeID("Usng"), charIDToTypeID("HstS"), charIDToTypeID("FllD"));
+        executeAction(idMk, desc1, DialogModes.NO);
+}
+
+/*
+ * @param SolidColor  color
+ * @param String  name
+ */
+_Ps._Windows._Swatches._NewSwatch(color, name) {
+    var red = color.rgb.red;
+    var green = color.rgb.green;
+    var blue = color.rgb.blue;
+    //
+    var addColorDescriptor = new ActionDescriptor();
+    // Get reference to Swatches panel
+    var swatchesPanelReference = new ActionReference();
+    swatchesPanelReference.putClass(stringIDToTypeID('colors'));
+    addColorDescriptor.putReference(stringIDToTypeID('null'), swatchesPanelReference);
+    // Setup a swatch and give it a name
+    var descriptorSwatch = new ActionDescriptor();
+    descriptorSwatch.putString(stringIDToTypeID('name'), name);
+    // Add RGB color information to the swatch
+    var descriptorColor = new ActionDescriptor();
+    descriptorColor.putDouble(stringIDToTypeID('red'), red);
+    descriptorColor.putDouble(stringIDToTypeID('grain'), green); // grain = green
+    descriptorColor.putDouble(stringIDToTypeID('blue'), blue);
+    // Add RGB to the swatch
+    descriptorSwatch.putObject(stringIDToTypeID('color'), stringIDToTypeID('RGBColor'), descriptorColor);
+    // Add swatch to the color descriptor
+    addColorDescriptor.putObject(stringIDToTypeID('using'), stringIDToTypeID('colors'), descriptorSwatch);
+    // Send to Photoshop
+    executeAction(stringIDToTypeID('make'), addColorDescriptor, DialogModes.NO);
+}
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////
+//  Tools
+///////////////////////////////////////////////////////////////////////////////
+
+_Ps._Tools._Move = {
+    
+    
+    _MoveTo: function(x, y) {
+        activeDocument.activeLayer.translate(UnitValue(x, 'px')  - activeDocument.activeLayer.bounds[0], UnitValue(y, 'px') - activeDocument.activeLayer.bounds[1]);
+    }
+}
+
 //selectTool('moveTool');
 //selectTool('marqueeRectTool');
 //selectTool('marqueeEllipTool');
@@ -363,43 +495,3 @@ function selectTool(tool) {
     desc9.putReference( app.charIDToTypeID('null'), ref7 );
     executeAction( app.charIDToTypeID('slct'), desc9, DialogModes.NO );
 };
-
-_Ps._Windows._History._NewSnapShot(name) {
-    var idMk = charIDToTypeID("Mk  ");
-    var desc1 = new ActionDescriptor();
-    var ref1 = new ActionReference();
-        ref1.putClass(charIDToTypeID("SnpS"));
-        desc1.putReference(charIDToTypeID("null"), ref1);
-    var ref2 = new ActionReference();
-        ref2.putProperty(charIDToTypeID("HstS"), charIDToTypeID("CrnH"));
-        desc1.putReference(charIDToTypeID("From"), ref2);
-        desc1.putString(charIDToTypeID("Nm  "), name);
-        desc1.putEnumerated(charIDToTypeID("Usng"), charIDToTypeID("HstS"), charIDToTypeID("FllD"));
-        executeAction(idMk, desc1, DialogModes.NO);
-}
-
-_Ps._Windows._Swatches._NewSwatch(color, name) {
-    var red = color.rgb.red;
-    var green = color.rgb.green;
-    var blue = color.rgb.blue;
-    //
-    var addColorDescriptor = new ActionDescriptor();
-    // Get reference to Swatches panel
-    var swatchesPanelReference = new ActionReference();
-    swatchesPanelReference.putClass(stringIDToTypeID('colors'));
-    addColorDescriptor.putReference(stringIDToTypeID('null'), swatchesPanelReference);
-    // Setup a swatch and give it a name
-    var descriptorSwatch = new ActionDescriptor();
-    descriptorSwatch.putString(stringIDToTypeID('name'), name);
-    // Add RGB color information to the swatch
-    var descriptorColor = new ActionDescriptor();
-    descriptorColor.putDouble(stringIDToTypeID('red'), red);
-    descriptorColor.putDouble(stringIDToTypeID('grain'), green); // grain = green
-    descriptorColor.putDouble(stringIDToTypeID('blue'), blue);
-    // Add RGB to the swatch
-    descriptorSwatch.putObject(stringIDToTypeID('color'), stringIDToTypeID('RGBColor'), descriptorColor);
-    // Add swatch to the color descriptor
-    addColorDescriptor.putObject(stringIDToTypeID('using'), stringIDToTypeID('colors'), descriptorSwatch);
-    // Send to Photoshop
-    executeAction(stringIDToTypeID('make'), addColorDescriptor, DialogModes.NO);
-}

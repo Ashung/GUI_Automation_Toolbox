@@ -1,32 +1,5 @@
 /*
-
-# Android Export Layers
-
-Export layers/groups to different Android DPIs size.
-
-Version: 20150122
-
-Author: [Ashung Hung](mailto:Ashung.hung@gmail.com)
-
-### Features
-
-* Export all layers/groups for multi sizes from one Photoshop document.
-* Custom Photoshop document DPI and export DPIs.
-* Custom export folder.
-* File prefix and suffix support.
-* Support export PNG-8, PNG-24, JPG-80, JPG-60.
-
-### Supported Photoshop Version
-Ps Version | Status
----|---
-CC 2014 | Work
-CC | Work
-CS 6 | No Test
-CS 5 | No Test
-
-*/
-/*
- * Copyright (c) 2015 Ashung Hung
+ * Copyright (c) 2015 Ashung Hung (mailto:Ashung.hung@gmail.com)
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,6 +12,8 @@ CS 5 | No Test
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
+ * Project Home: github.com/Ashung/GUI_Automation_Toolbox
  */
 
 (function(){
@@ -399,21 +374,27 @@ CS 5 | No Test
      * @param String dpiKeyword [nodpi|ldpi|mdpi|hdpi|tvdpi|xhdpi|xxhdpi|xxxhdpi]
      */
     function density(dpiKeyword) {
-        switch(dpiKeyword.toLowerCase()) {
-            case 'ldpi':
-                return 120;
-            case 'mdpi':
-                return 160;
-            case 'hdpi':
-                return 240;
-            case 'xhdpi':
-                return 320;
-            case 'xxhdpi':
-                return 480;
-            case 'xxxhdpi':
-                return 640;
-            default:
-                return 160;
+        if(parseInt(dpiKeyword) > 0) {
+            return parseInt(dpiKeyword);
+        } else {
+            switch(dpiKeyword.toLowerCase()) {
+                case 'ldpi':
+                    return 120;
+                case 'mdpi':
+                    return 160;
+                case 'tvdpi':
+                    return 213;
+                case 'hdpi':
+                    return 240;
+                case 'xhdpi':
+                    return 320;
+                case 'xxhdpi':
+                    return 480;
+                case 'xxxhdpi':
+                    return 640;
+                default:
+                    return 160;
+            }
         }
     }
 
