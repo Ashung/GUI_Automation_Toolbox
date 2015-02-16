@@ -1,6 +1,6 @@
 # GUI Automation Toolbox (Work in process)
 
-![Project Status](https://stillmaintained.com/Ashung/GUI_Automation_Toolbox.png)
+[![Project Status](https://stillmaintained.com/Ashung/GUI_Automation_Toolbox.png)](https://stillmaintained.com/Ashung/GUI_Automation_Toolbox)
 
 Scripts that automate your Android, iOS GUI design workflow.
 

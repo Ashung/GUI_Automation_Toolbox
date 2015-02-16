@@ -113,8 +113,9 @@
         }\
     }";
 /*
-            separator1: Panel { preferredSize: [300, 0] },\
-        compatibility: Group {\
+
+           separator1: Panel { preferredSize: [300, 0] },\
+        qualifier: Group {\
             orientation: 'column',\
             alignChildren: 'left', \
             items1: Group {\
@@ -122,16 +123,13 @@
                 label: StaticText { text: 'Language and region:' },\
                 list: DropDownList {\
                     size: [80, 25] \
-                }\
-            },\
-            items2: Group {\
-                orientation: 'row',\
+                },\
                 label: StaticText { text: 'Screen orientation:' },\
                 list: DropDownList {\
                     size: [80, 25] \
                 }\
             },\
-            items3: Group {\
+            items2: Group {\
                 label: StaticText { text: 'Touch screentype:' },\
                 list: DropDownList {\
                     size: [60, 25] \
@@ -161,8 +159,7 @@
                     size: [50, 25] \
                 }\
             }\
-        },\
-        
+        },\     
         
         */
     var AAE = new Window(ui);
@@ -254,15 +251,46 @@
         //// resFolder  Qualifier support
         // http://www.linuxidc.com/Linux/2014-09/106825.htm
         // http://blog.csdn.net/persuit/article/details/7663574
+        
+        /*
+            MMC and MNC: http://en.wikipedia.org/wiki/Mobile_country_code
+            Language and region: http://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
+                                 http://en.wikipedia.org/wiki/ISO_3166-2
+                                 <language>_r<region>
+            Layout Direction: ldrtl, ldltr
+            smallest Width: sw<N>dp
+            Available width: <N>dp
+            Available height: <N>dp
+            Screen size: smallnormallargexlarge
+            Screen aspect: long, notlong
+            Screen orientation: port, land
+            UI mode: car, desk, television, appliance, watch
+            Night mode: night, notnight
+            Screen pixel density (dpi): ldpi, mdpi, hdpi, xhdpi, nodpi, tvdpi
+            Touchscreen type: notouch, finger
+            Keyboard availability: keysexposed, keyshidden, keyssoft
+            Primary text input method: nokeys, qwerty, 12key
+            Navigation key availability: navexposed, navhidden
+            Primary non-touch navigation method: nonav, dpad, trackball, wheel
+            Screen dimensions: <N1>x<N2>(N1>N2), 320 x240, 640 x480
+            Platform Version (API level): v<N>
+            Minorversion: 0
+        */
+        
+        //var qualifier_platformVersion = 'v4';
 
         for(var i = 0; i < dpis.length; i ++) {
-            eval("if($" + dpis[i] + ".value){exportAssets(resFolder,'" + dpis[i] + "')}");
+            var resFile = path.text + '/' + resFolder;
+                resFile += '-' + dpis[i];
+                //resFile += '-' + qualifier_platformVersion;
+                resFile += '/' + fileName.text;
+            eval("if($" + dpis[i] + ".value){exportAssets(resFile,'" + dpis[i] + "')}");
         }
     
         AAE.close();
     }
 
-    function exportAssets(resFolderKeyword, dpiKeyword) {
+    function exportAssets(resFileWithOutExtName, dpiKeyword) {
         if(firstTimeRun) {
             activeDocument.suspendHistory('__' + docDPI + '__' + timeStamp, '');
         }
@@ -273,7 +301,7 @@
             } else {
                 ninePatchResize(density(dpiKeyword)/density(docDPI));
             }
-            var targetFile = File(path.text + '/' + resFolderKeyword + '-' + dpiKeyword + '/' + fileName.text + '.9.png');
+            var targetFile = File(resFileWithOutExtName + '.9.png');
             exportPNG(targetFile);
         } else {
             if(isImageFile) {
@@ -289,7 +317,7 @@
                     resize(density(dpiKeyword)/density(docDPI));
                 }
             }
-            var targetFile = File(path.text + '/' + resFolderKeyword + '-' + dpiKeyword + '/' + fileName.text + '.png');
+            var targetFile = File(resFileWithOutExtName + '.png');
             exportPNG(targetFile);
         }
         
