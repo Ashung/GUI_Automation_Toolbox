@@ -1,0 +1,33 @@
+{
+  "name": "Ps.js",
+  "version": "1.0.0",
+  "description": "Photoshop Scripting make easy.",
+  "main": "ps.js",
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {
+    "gulp-watch": "^4.3.5",
+    "gulp": "^3.9.0",
+    "gulp-concat": "^2.6.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "test/test.jsx"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Ashung/ps.js.git"
+  },
+  "keywords": [
+    "Ps",
+    "Photoshop",
+    "ExtendScript"
+  ],
+  "author": "Ashung Hung",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Ashung/ps.js/issues"
+  },
+  "homepage": "https://github.com/Ashung/ps.js#readme"
+}
