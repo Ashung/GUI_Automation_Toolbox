@@ -184,3 +184,17 @@ function rectangleRadius(topleft, topright, bottomright, bottomleft) {
         desc1.putObject(stringIDToTypeID("keyOriginRRectRadii"), stringIDToTypeID("radii"), desc2);
     executeAction(stringIDToTypeID("changePathDetails"), desc1, DialogModes.NO);
 }
+
+function saveTextFile(savePath, contents) {
+    var tf = new File(savePath);
+    if(!Folder(tf.path).exists) {
+        Folder(tf.path).create();
+    }
+    if(tf.exists) {
+        tf.remove();
+    }
+    tf.encoding = "UTF8";
+    tf.open("e");
+    tf.writeln(contents);
+    tf.close();
+}
